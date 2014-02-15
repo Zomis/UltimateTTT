@@ -28,7 +28,6 @@ public class TTBoard implements Winnable, HasSub<TTTile> {
 		this.winConds = TicUtils.setupWins(this);
 	}
 	
-	@Override
 	public int getSize() {
 		return this.game.getSize();
 	}
@@ -56,7 +55,7 @@ public class TTBoard implements Winnable, HasSub<TTTile> {
 	private TTPlayer determineWinner() {
 		for (TTWinCondition cond : this.winConds) {
 			TTPlayer winner = cond.determineWinner();
-			if (TTPlayer.isRealPlayer(winner))
+			if (TTPlayer.isExactlyOnePlayer(winner))
 				return winner;
 		}
 		return TTPlayer.NONE;
@@ -79,6 +78,21 @@ public class TTBoard implements Winnable, HasSub<TTTile> {
 				this.getSub(xx, yy).reset();
 			}
 		}
+	}
+
+	@Override
+	public int getSizeX() {
+		return this.getSize();
+	}
+
+	@Override
+	public int getSizeY() {
+		return this.getSize();
+	}
+
+	@Override
+	public int getConsecutiveRequired() {
+		return this.getSize();
 	}
 
 }

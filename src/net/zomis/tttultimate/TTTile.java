@@ -23,7 +23,7 @@ public class TTTile implements Winnable {
 	public boolean isPlayable() {
 		if (playedBy != null && playedBy != TTPlayer.NONE)
 			return false;
-		if (board.getWonBy().isRealPlayer())
+		if (board.getWonBy().isExactlyOnePlayer())
 			return false;
 		if (board.getGame().isGameOver())
 			return false;
@@ -41,16 +41,6 @@ public class TTTile implements Winnable {
 		return true;
 	}
 	
-	public char getCharOutput() {
-		if (playedBy == null || playedBy == TTPlayer.NONE)
-			return isPlayable() ? '.' : ' ';
-		if (playedBy == TTPlayer.XO)
-			return '?';
-		TTPlayer winner = board.getWonBy();
-		return TTPlayer.isRealPlayer(winner) && !winner.equals(playedBy) 
-				? '-' : playedBy.toString().charAt(0);
-	}
-
 	public int getGlobalX() {
 		return board.getX() * board.getSize() + this.x;
 	}
@@ -70,6 +60,7 @@ public class TTTile implements Winnable {
 	public TTBoard getDestinationBoard() {
 		return board.getGame().getSub(x, y);
 	}
+	
 	@Override
 	public String toString() {
 		return getGlobalX() + ", " + getGlobalY();

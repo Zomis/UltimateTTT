@@ -1,21 +1,27 @@
 package net.zomis.tttultimate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collections;
+import java.util.List;
 
 public class TTWinCondition {
 
-	private final Set<Winnable> winnables;
+	private final List<Winnable> winnables;
+	private final int consecutive;
 
 	public TTWinCondition(Winnable... winnables) {
 		this(Arrays.asList(winnables));
 	}
-	public TTWinCondition(Collection<Winnable> winnables) {
+	public TTWinCondition(List<? extends Winnable> winnables) {
+		this(winnables, winnables.size());
+	}
+	
+	public TTWinCondition(List<? extends Winnable> winnables, int consecutive) {
 		if (winnables.isEmpty())
 			throw new IllegalArgumentException("Can't have an empty win condition!");
-		this.winnables = new HashSet<>(winnables);
+		this.winnables = Collections.unmodifiableList(new ArrayList<Winnable>(winnables));
+		this.consecutive = consecutive;
 	}
 	
 	public int neededForWin(TTPlayer player) {
@@ -33,10 +39,32 @@ public class TTWinCondition {
 		return i;
 	}
 	
+	@Deprecated
 	public TTPlayer determineWinner() {
 		TTPlayer winner = TTPlayer.XO;
 		for (Winnable winnable : winnables)
 			winner = winner.and(winnable.getWonBy());
+		return winner;
+	}
+	
+	public TTPlayer determineWinnerNew() {
+		TTPlayer winner = TTPlayer.NONE;
+		
+		int[] consecutivePlayers = new int[TTPlayer.values().length];
+		for (Winnable winnable : winnables) {
+			TTPlayer current = winnable.getWonBy();
+			for (TTPlayer pl : TTPlayer.values()) {
+				int i = pl.ordinal();
+				if (pl.and(current) == pl) {
+					consecutivePlayers[i]++;
+				}
+				else consecutivePlayers[i] = 0;
+				
+				if (consecutivePlayers[i] >= this.consecutive) {
+					winner = winner.or(pl);
+				}
+			}
+		}
 		return winner;
 	}
 	

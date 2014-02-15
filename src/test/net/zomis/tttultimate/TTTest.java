@@ -86,7 +86,7 @@ public class TTTest {
 					out.append('|');
 				}
 				TTTile tile = game.getTile(x, y);
-				out.append(tile.getCharOutput());
+				out.append(getCharOutput(tile));
 				if (x % size == size - 1)
 					out.append('|');
 			}
@@ -101,10 +101,21 @@ public class TTTest {
 		System.out.println();
 	}
 	
+	public static char getCharOutput(TTTile tile) {
+		TTPlayer player = tile.getWonBy();
+		if (player == null || player == TTPlayer.NONE)
+			return tile.isPlayable() ? '.' : ' ';
+		if (player == TTPlayer.XO)
+			return '?';
+		TTPlayer winner = tile.getBoard().getWonBy();
+		return TTPlayer.isExactlyOnePlayer(winner) && !winner.equals(player) 
+				? '-' : player.toString().charAt(0);
+	}
+	
 	@Test
 	public void cannotPlayWonBoard() {
 		TTTUltimateGame game = new TTTUltimateGame();
-//		game.output();
+
 		if (game.getSize() != 3)
 			return;
 		

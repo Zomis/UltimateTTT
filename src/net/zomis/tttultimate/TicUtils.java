@@ -16,25 +16,30 @@ public class TicUtils {
 	
 	public static <T> Collection<T> getTiles(HasSub<T> board) {
 		List<T> list = new ArrayList<>();
-		int size = board.getSize();
-		for (int x = 0; x < size; x++) {
-			for (int y = 0; y < size; y++) {
+		int sizeX = board.getSizeX();
+		int sizeY = board.getSizeY();
+		for (int x = 0; x < sizeX; x++) {
+			for (int y = 0; y < sizeY; y++) {
 				list.add(board.getSub(x, y));
 			}
 		}
 		return list;
 	}
 	public static List<Winnable> emptyWinnables(HasSub<?> board) {
-		return new ArrayList<>(board.getSize());
+		return new ArrayList<>(board.getConsecutiveRequired());
 	}
 	public static <T extends Winnable> List<TTWinCondition> setupWins(HasSub<T> board) {
 		List<Winnable> winnables;
-		int size = board.getSize();
+		if (board.getSizeX() != board.getSizeY())
+			throw new IllegalArgumentException("This method only works for quadratic boards");
+		
+		int size = board.getSizeX();
+		
 		List<TTWinCondition> conds = new ArrayList<>();
-		for (int xx = 0; xx < board.getSize(); xx++) {
+		for (int xx = 0; xx < board.getSizeX(); xx++) {
 			// Scan columns for a winner
 			winnables = emptyWinnables(board);
-			for (int yy = 0; yy < board.getSize(); yy++) {
+			for (int yy = 0; yy < board.getSizeY(); yy++) {
 				winnables.add(board.getSub(xx, yy));
 			}
 			conds.add(new TTWinCondition(winnables));
@@ -49,12 +54,12 @@ public class TicUtils {
 		
 		// Scan diagonals for a winner
 		winnables = emptyWinnables(board);
-		for (int i = 0; i < board.getSize(); i++)
+		for (int i = 0; i < size; i++)
 			winnables.add(board.getSub(i, i));
 		conds.add(new TTWinCondition(winnables));
 		
 		winnables = emptyWinnables(board);
-		for (int i = 0; i < board.getSize(); i++)
+		for (int i = 0; i < size; i++)
 			winnables.add(board.getSub(size - i - 1, i));
 		conds.add(new TTWinCondition(winnables));
 		

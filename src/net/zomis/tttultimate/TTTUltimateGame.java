@@ -53,6 +53,10 @@ public class TTTUltimateGame implements Winnable, HasSub<TTBoard> {
 		this.history.append(history);
 	}
 	
+	public boolean isPlayable() {
+		return false;
+	}
+	
 	public void makeMoves(String history) throws IllegalStateException, IllegalArgumentException {
 		for (String move : history.split(",")) {
 			if (move.isEmpty())
@@ -124,7 +128,6 @@ public class TTTUltimateGame implements Winnable, HasSub<TTBoard> {
 		return this.boards[x][y];
 	}
 
-	@Override
 	public int getSize() {
 		return this.size;
 	}
@@ -159,5 +162,17 @@ public class TTTUltimateGame implements Winnable, HasSub<TTBoard> {
 		this.currentPlayer = TTPlayer.X;
 		this.activeBoard = null;
 		this.history = new StringBuilder();
+	}
+	@Override
+	public int getSizeX() {
+		return this.getSize();
+	}
+	@Override
+	public int getSizeY() {
+		return this.getSize();
+	}
+	@Override
+	public int getConsecutiveRequired() {
+		return this.getSize();
 	}
 }

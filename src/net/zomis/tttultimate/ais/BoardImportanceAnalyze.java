@@ -21,7 +21,7 @@ public class BoardImportanceAnalyze implements PreScorer<TTTUltimateGame> {
 		for (TTBoard board : TicUtils.getTiles(params)) {
 			Map<TTPlayer, Double> map = new HashMap<>();
 			for (TTPlayer player : TTPlayer.values()) {
-				if (!player.isRealPlayer())
+				if (!player.isExactlyOnePlayer())
 					continue;
 				
 				double dd = 0;
