@@ -4,19 +4,18 @@ import java.util.Collection;
 
 import net.zomis.aiscores.AbstractScorer;
 import net.zomis.aiscores.ScoreParameters;
-import net.zomis.tttultimate.TTBoard;
 import net.zomis.tttultimate.TTPlayer;
-import net.zomis.tttultimate.TTTUltimateGame;
-import net.zomis.tttultimate.TTTile;
 import net.zomis.tttultimate.TTWinCondition;
 import net.zomis.tttultimate.TicUtils;
+import net.zomis.tttultimate.dry.TTBase;
+import net.zomis.tttultimate.dry.TTController;
 
-public class OpponentShouldNotPlayScorerV1 extends AbstractScorer<TTTUltimateGame, TTTile> {
+public class OpponentShouldNotPlayScorerV1 extends AbstractScorer<TTController, TTBase> {
 
 	@Override
-	public double getScoreFor(TTTile field, ScoreParameters<TTTUltimateGame> scores) {
+	public double getScoreFor(TTBase field, ScoreParameters<TTController> scores) {
 		TTPlayer opponent = scores.getParameters().getCurrentPlayer().next();
-		TTBoard sendToBoard = field.getDestinationBoard();
+		TTBase sendToBoard = scores.getAnalyze(NextPosFinder.class).getDestinationBoard(field);
 		
 		Collection<TTWinCondition> colls = TicUtils.getWinCondsWith(field, sendToBoard);
 		double i = 0;

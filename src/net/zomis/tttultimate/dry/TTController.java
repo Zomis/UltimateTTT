@@ -4,38 +4,50 @@ import net.zomis.tttultimate.TTPlayer;
 
 public abstract class TTController {
 	
-	private final TTBase game;
+	protected final TTBase game;
+	protected TTPlayer currentPlayer = TTPlayer.X;
+	private OnMoveListener2	moveListener;
+	private StringBuilder history;
 
 	public TTController(TTBase board) {
 		this.game = board;
+		this.history = new StringBuilder();
 	}
 
-	protected TTPlayer currentPlayer = TTPlayer.X;
-	
 	public abstract boolean isAllowedPlay(TTBase tile);
 	
 	public final boolean play(TTBase tile) {
+		if (tile == null)
+			throw new IllegalArgumentException("Tile to play at cannot be null.");
+		
 		if (!isAllowedPlay(tile)) {
 			System.out.println("Warning: Move was not made. Unable to play at " + tile);
 			return false;
 		}
+		TTBase playedTile = tile;
+		if (!this.performPlay(tile))
+			return false;
+
+		this.addToHistory(tile);
 		
-		boolean success = this.performPlay(tile);
-		// Check for win condition on tile and if there is a win, cascade to it's parents
-		do {
-			tile = tile.determineWinner() == null ? null : tile.getParent();
-		}
-		while (tile != null);
-		return success;
+		if (this.moveListener != null)
+			this.moveListener.onMove(playedTile);
+		
+		return true;
 	}
 	
+	private void addToHistory(TTBase tile) {
+		if (history.length() > 0)
+			history.append(",");
+		history.append(Integer.toString(tile.getGlobalX(), Character.MAX_RADIX));
+		history.append(Integer.toString(tile.getGlobalY(), Character.MAX_RADIX));
+	}
+
 	protected abstract boolean performPlay(TTBase tile);
 	
 	public boolean play(int x, int y) {
 		return this.play(game.getSmallestTile(x, y));
 	}
-	
-	protected abstract void onPlay(TTBase tile);
 	
 	public TTPlayer getCurrentPlayer() {
 		return currentPlayer;
@@ -45,8 +57,52 @@ public abstract class TTController {
 		currentPlayer = currentPlayer.next();
 	}
 	
-	protected TTBase getGame() {
+	public TTBase getGame() {
 		return game;
 	}
+
+	public boolean isGameOver() {
+		return game.isWon();
+	}
+
+	public TTPlayer getWonBy() {
+		return game.getWonBy();
+	}
+
+	public void setOnMoveListener(OnMoveListener2 moveListener) {
+		this.moveListener = moveListener;
+	}
 	
+	
+	public void makeMoves(String history) throws IllegalStateException, IllegalArgumentException {
+		for (String move : history.split(",")) {
+			if (move.isEmpty())
+				continue;
+			if (move.length() != 2)
+				throw new IllegalArgumentException("Unexcepted move length. " + move);
+			
+			int x = Integer.parseInt(String.valueOf(move.charAt(0)), Character.MAX_RADIX);
+			int y = Integer.parseInt(String.valueOf(move.charAt(1)), Character.MAX_RADIX);
+			
+			TTBase tile = game.getSmallestTile(x, y);
+			if (!this.play(tile))
+				throw new IllegalStateException("Unable to make a move at " + x + ", " + y + ": " + tile);
+		}
+	}
+	public String saveHistory() {
+		return this.history.toString();
+	}
+	
+	public void reset() {
+		this.currentPlayer = TTPlayer.X;
+		this.history = new StringBuilder();
+		this.game.reset();
+		this.onReset();
+	}
+
+	protected abstract void onReset();
+	
+	public String getViewFor(TTBase tile) {
+		return tile.isWon() ? tile.getWonBy().toString() : "";
+	}
 }

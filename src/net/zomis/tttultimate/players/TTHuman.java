@@ -10,30 +10,30 @@ public class TTHuman {
 
 	private Scanner sc = new Scanner(System.in);
 
-	public TTTile play(TTTUltimateGame board) {
-		TTTile chosen = null;
+	public TTTile play(TTTUltimateGame game) {
+		TTTile chosenTile = null;
 		do {
 //			board.output();
-			TTBoard active = board.getActiveBoard();
+			TTBoard active = game.getActiveBoard();
 			if (active != null) {
 				int xx = active.getX();
 				int yy = active.getY();
-				int size = board.getSize();
+				int size = game.getSize();
 				System.out.printf("Active board is within coordinates %d-%d, %d-%d", 
 						xx * size, xx * size + size - 1, 
 						yy * size, yy * size + size - 1);
 				System.out.println();
 			}
 			System.out.print("Input x coordinate: ");
-			int x = input(sc, board);
+			int x = input(sc, game);
 			System.out.print("Input y coordinate: ");
-			int y = input(sc, board);
-			chosen = board.getTile(x, y);
-			System.out.println("Chosen tile is " + chosen + " in board " + board + " playable " + (chosen == null ? "XXX" : chosen.isPlayable()));
+			int y = input(sc, game);
+			chosenTile = game.getTile(x, y);
+			System.out.println("Chosen tile is " + chosenTile + " in board " + game + " playable " + (chosenTile == null ? "XXX" : chosenTile.isPlayable()));
 		}
-		while (chosen == null || !chosen.isPlayable());
+		while (chosenTile == null || !chosenTile.isPlayable());
 		
-		return chosen;
+		return chosenTile;
 	}
 	
 	private final TTAI logAI = TTAIFactory.best().build();
@@ -45,7 +45,7 @@ public class TTHuman {
 			next = sc.next();
 			result = handleInput(next);
 			if (next.equals("S")) {
-				logAI.logScores(board);
+//				logAI.logScores(board); // TODO logAI.logScores
 			}
 			else if (next.equals("P")) {
 				// Find out global status of the entire game

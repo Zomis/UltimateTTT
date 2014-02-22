@@ -10,6 +10,17 @@ public enum TTPlayer {
 		return this == X ? O : X;
 	}
 	
+	/**
+	 * Determine if this player is (also) another player.<br>
+	 * This is the same as <code>this.and(other) == other</code>
+	 * 
+	 * @param other
+	 * @return
+	 */
+	public boolean is(TTPlayer other) {
+		return this.and(other) == other;
+	}
+	
 	public TTPlayer and(TTPlayer other) {
 		if (this == NONE || other == NONE || other == null)
 			return NONE;

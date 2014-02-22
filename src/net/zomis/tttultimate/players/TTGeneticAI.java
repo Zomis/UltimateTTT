@@ -10,17 +10,17 @@ import net.zomis.aiscores.extra.GeneticInterface;
 import net.zomis.aiscores.extra.ScoreGenetics;
 import net.zomis.fight.FightResults;
 import net.zomis.fight.GameFight;
-import net.zomis.tttultimate.TTTUltimateGame;
-import net.zomis.tttultimate.TTTile;
+import net.zomis.tttultimate.dry.TTBase;
+import net.zomis.tttultimate.dry.TTController;
 
-public class TTGeneticAI implements GeneticInterface<TTTUltimateGame, TTTile, TTAI> {
-	private ScoreGenetics<TTTUltimateGame, TTTile, TTAI> genetics;
+public class TTGeneticAI implements GeneticInterface<TTController, TTBase, TTAI> {
+	private ScoreGenetics<TTController, TTBase, TTAI> genetics;
 	private Random random = new Random();
 	
 	private List<TTAI> ais = new ArrayList<>();
 	
 	public TTGeneticAI() {
-		genetics = new ScoreGenetics<TTTUltimateGame, TTTile, TTAI>(this, random);
+		genetics = new ScoreGenetics<TTController, TTBase, TTAI>(this, random);
 		
 		ais.add(TTAIFactory.improved3().build());
 		ais.add(TTAIFactory.version3().build());
@@ -29,17 +29,17 @@ public class TTGeneticAI implements GeneticInterface<TTTUltimateGame, TTTile, TT
 	}
 
 	@Override
-	public ScoreConfig<TTTUltimateGame, TTTile> getConfigFor(TTAI c) {
+	public ScoreConfig<TTController, TTBase> getConfigFor(TTAI c) {
 		return c.getConfig();
 	}
 
 	@Override
-	public ScoreConfig<TTTUltimateGame, TTTile> newConfig() {
+	public ScoreConfig<TTController, TTBase> newConfig() {
 		return TTAIFactory.randomAllIn().build().getConfig();
 	}
 
 	@Override
-	public TTAI newFromConfig(ScoreConfig<TTTUltimateGame, TTTile> config) {
+	public TTAI newFromConfig(ScoreConfig<TTController, TTBase> config) {
 		return new TTAI("Genetic", config);
 	}
 

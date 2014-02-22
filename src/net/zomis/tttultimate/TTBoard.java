@@ -3,6 +3,8 @@ package net.zomis.tttultimate;
 import java.util.Collection;
 import java.util.List;
 
+import net.zomis.tttultimate.dry.TTUtils2;
+
 
 
 public class TTBoard implements Winnable, HasSub<TTTile> {
@@ -25,7 +27,7 @@ public class TTBoard implements Winnable, HasSub<TTTile> {
 				tiles[x][y] = new TTTile(this, x, y);
 			}
 		}
-		this.winConds = TicUtils.setupWins(this);
+		this.winConds = TTUtils2.setupWinsNew(this);
 	}
 	
 	public int getSize() {
@@ -54,7 +56,7 @@ public class TTBoard implements Winnable, HasSub<TTTile> {
 	}
 	private TTPlayer determineWinner() {
 		for (TTWinCondition cond : this.winConds) {
-			TTPlayer winner = cond.determineWinner();
+			TTPlayer winner = cond.determineWinnerNew();
 			if (TTPlayer.isExactlyOnePlayer(winner))
 				return winner;
 		}
@@ -93,6 +95,11 @@ public class TTBoard implements Winnable, HasSub<TTTile> {
 	@Override
 	public int getConsecutiveRequired() {
 		return this.getSize();
+	}
+
+	@Override
+	public boolean hasSubs() {
+		return true;
 	}
 
 }

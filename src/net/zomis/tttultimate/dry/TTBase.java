@@ -1,5 +1,6 @@
 package net.zomis.tttultimate.dry;
 
+import java.util.Collections;
 import java.util.List;
 
 import net.zomis.tttultimate.HasSub;
@@ -8,14 +9,16 @@ import net.zomis.tttultimate.TTWinCondition;
 import net.zomis.tttultimate.Winnable;
 
 public class TTBase implements Winnable, HasSub<TTBase> {
-	
+	// Container
 	private final TTBase[][] subs;
-	private final List<TTWinCondition> winConditions;
-	private TTPlayer playedBy = TTPlayer.NONE;
-	private final TTBase parent;
 	private final TTMNKParameters mnkParams;
+	
+	// Winnable
+	private final List<TTWinCondition> winConditions;
+	private final TTBase parent;
 	private final int x;
 	private final int y;
+	private TTPlayer playedBy = TTPlayer.NONE;
 	
 	public TTBase(TTBase parent, TTMNKParameters parameters, TTFactory factory) {
 		this(parent, 0, 0, parameters, factory);
@@ -32,16 +35,15 @@ public class TTBase implements Winnable, HasSub<TTBase> {
 				this.subs[xx][yy] = factory.construct(this, xx, yy);
 			}
 		}
-		this.winConditions = TTUtils2.setupWins(this);
+		this.winConditions = Collections.unmodifiableList(TTUtils2.setupWinsNew(this));
 	}
 	
-	protected TTPlayer determineWinner() {
+	public void determineWinner() {
 		TTPlayer winner = TTPlayer.NONE;
 		for (TTWinCondition cond : this.winConditions) {
 			winner = winner.or(cond.determineWinnerNew());
 		}
 		this.playedBy = winner;
-		return winner;
 	}
 	
 	@Override
@@ -56,7 +58,7 @@ public class TTBase implements Winnable, HasSub<TTBase> {
 	}
 
 	@Override
-	public Iterable<TTWinCondition> getWinConds() {
+	public List<TTWinCondition> getWinConds() {
 		return winConditions;
 	}
 
@@ -95,23 +97,13 @@ public class TTBase implements Winnable, HasSub<TTBase> {
 		return y;
 	}
 	
-	public TTBase getSmallestTile(int x, int y) {
-		// TODO: This is probably not optimal. Works best for boards where all dimensions have the same size. Might work for others too though.
-		TTBase board = getSub(x / getSizeX(), y / getSizeY());
-		return board.getSub(x % getSizeX(), y % getSizeY());
-	}
-	
-	public TTBase getSibling(int deltaX, int deltaY) {
-		if (parent == null)
-			return null;
-		return parent.getSub(x + deltaX, y + deltaY);
-	}
-	
-	public boolean isGameOver() {
-		return TTPlayer.isExactlyOnePlayer(playedBy);
+	public boolean isWon() {
+		return playedBy != TTPlayer.NONE;
 	}
 	
 	public void setPlayedBy(TTPlayer playedBy) {
+		if (playedBy == null && this.hasSubs() && parent != null)
+			new Exception().printStackTrace();
 		this.playedBy = playedBy;
 	}
 	
@@ -121,8 +113,46 @@ public class TTBase implements Winnable, HasSub<TTBase> {
 	
 	@Override
 	public String toString() {
-		// Can't use String.format because of compability with GWT
-		return "{Pos " + x + ", " + y + "; Size " + getSizeX() + ", " + getSizeY() + "; Played by " + getWonBy() + "}";
+		return "{Pos " + x + ", " + y + "; Size " + getSizeX() + ", " + getSizeY() + "; Played by " + getWonBy() + ". Parent is " + parent + "}";
+	}
+	
+	public void reset() {
+		this.playedBy = TTPlayer.NONE;
+		for (int xx = 0; xx < getSizeX(); xx++) {
+			for (int yy = 0; yy < getSizeY(); yy++) {
+				this.getSub(xx, yy).reset();
+			}
+		}
+	}
+	public int getGlobalX() {
+		if (parent == null)
+			return 0;
+		if (parent.getParent() == null)
+			return x;
+		return parent.getX() * parent.getParent().getSizeX() + this.x;
+	}
+	
+	// TODO: Initialize the globalX and Y values from one counter that is controlled by the top-most board?
+	public int getGlobalY() {
+		if (parent == null)
+			return 0;
+		if (parent.getParent() == null)
+			return y;
+		return parent.getY() * parent.getParent().getSizeY() + this.y;
+	}
+	
+	public TTBase getSmallestTile(int x, int y) {
+		// TODO: This is probably not optimal. Works best for boards where all dimensions have the same size. Might work for others too though.
+		
+		int subX = x / getSizeX();
+		int subY = y / getSizeY();
+		TTBase board = getSub(subX, subY);
+		if (board == null) {
+			return getSub(0, 0).getSub(x, y);// TODO: Dirty hack for the way I have organized regular MNK-games
+//			throw new NullPointerException("Null board retreived for " + x + ", " + y + ": sub " + subX + ", " + subY + " size " + getSizeX() + ", " + getSizeY());
+		}
+		
+		return board.getSub(x - subX*getSizeX(), y - subY*getSizeY());
 	}
 	
 }

@@ -10,7 +10,7 @@ public class TTClassicController extends TTController {
 
 	@Override
 	public boolean isAllowedPlay(TTBase tile) {
-		return tile.getParent() != null && 
+		return tile.getParent() != null && !tile.hasSubs() &&
 				tile.getParent().getWonBy().equals(TTPlayer.NONE) &&
 				tile.getWonBy() == TTPlayer.NONE;
 	}
@@ -18,12 +18,13 @@ public class TTClassicController extends TTController {
 	@Override
 	public boolean performPlay(TTBase tile) {
 		tile.setPlayedBy(currentPlayer);
+		tile.getParent().determineWinner();
 		nextPlayer();
 		return true;
 	}
 
 	@Override
-	protected void onPlay(TTBase tile) {
+	protected void onReset() {
 	}
 
 }

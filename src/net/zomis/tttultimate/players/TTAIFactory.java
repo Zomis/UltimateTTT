@@ -7,26 +7,29 @@ import net.zomis.aiscores.ScoreConfigFactory;
 import net.zomis.aiscores.scorers.Scorers;
 import net.zomis.fight.FightInterface;
 import net.zomis.tttultimate.TTPlayer;
-import net.zomis.tttultimate.TTTUltimateGame;
-import net.zomis.tttultimate.TTTile;
 import net.zomis.tttultimate.ais.BlockOpponentScorer;
-import net.zomis.tttultimate.ais.ImportantForMe;
 import net.zomis.tttultimate.ais.BoardImportanceAnalyze;
 import net.zomis.tttultimate.ais.DestinationBoardIsWonScorer;
 import net.zomis.tttultimate.ais.INeedScorerV1;
 import net.zomis.tttultimate.ais.INeedScorerV2;
 import net.zomis.tttultimate.ais.INeedScorerV3;
 import net.zomis.tttultimate.ais.INeedScorerV4;
+import net.zomis.tttultimate.ais.ImportantForMe;
+import net.zomis.tttultimate.ais.NextPosFinder;
 import net.zomis.tttultimate.ais.OpponentShouldNotPlayScorerV1;
 import net.zomis.tttultimate.ais.OpponentShouldNotPlayScorerV2;
 import net.zomis.tttultimate.ais.OpponentShouldNotPlayScorerV3;
 import net.zomis.tttultimate.ais.WhereCanOpponentSendMe;
+import net.zomis.tttultimate.dry.TTBase;
+import net.zomis.tttultimate.dry.TTController;
+import net.zomis.tttultimate.dry.TTFactoryImpl;
+import net.zomis.tttultimate.dry.TTUltimateController;
 
 public class TTAIFactory {
 	private final String	name;
-	private final ScoreConfigFactory<TTTUltimateGame, TTTile>	factory;
+	private final ScoreConfigFactory<TTController, TTBase>	factory;
 
-	private TTAIFactory(String name, ScoreConfigFactory<TTTUltimateGame, TTTile> factory) {
+	private TTAIFactory(String name, ScoreConfigFactory<TTController, TTBase> factory) {
 		this.name = name;
 		this.factory = factory;
 	}
@@ -34,12 +37,14 @@ public class TTAIFactory {
 	public TTAI build() {
 		return new TTAI(name, factory.build());
 	}
-	private ScoreConfigFactory<TTTUltimateGame, TTTile> copy() {
+	private ScoreConfigFactory<TTController, TTBase> copy() {
 		return factory.copy();
 	}
 
 	public static TTAIFactory random() {
-		return new TTAIFactory("#AI_Complete_Idiot", new ScoreConfigFactory<TTTUltimateGame, TTTile>());
+		return new TTAIFactory("#AI_Complete_Idiot", new ScoreConfigFactory<TTController, TTBase>()
+				.withPreScorer(new NextPosFinder())
+		);
 	}
 	public static TTAIFactory versionOne() {
 		return new TTAIFactory("#AI_First", 
@@ -50,12 +55,12 @@ public class TTAIFactory {
 	public static TTAIFactory version2() {
 		return new TTAIFactory("#AI_Second", 
 				versionOne().copy()
-				.withPreScorer(new PreScorer<TTTUltimateGame>() {
+				.withPreScorer(new PreScorer<TTController>() {
 					@Override
 					public void onScoringComplete() {
 					}
 					@Override
-					public Object analyze(TTTUltimateGame params) {
+					public Object analyze(TTController params) {
 						return new Object();
 					}
 				})
@@ -95,12 +100,13 @@ public class TTAIFactory {
 	public static class FightImpl implements FightInterface<TTAI> {
 		@Override
 		public TTAI determineWinner(TTAI[] players, int fightNumber) {
-			TTTUltimateGame game = new TTTUltimateGame();
+			TTBase board = new TTFactoryImpl().ultimate();
+			TTController game = new TTUltimateController(board);
 			while (!game.isGameOver()) {
 				TTAI pl = playerFor(players, game.getCurrentPlayer());
-				TTTile choice = pl.play(game);
+				TTBase choice = pl.play(game);
 				if (choice != null)
-					choice.playAt();
+					game.play(choice);
 				else break;
 			}
 			if (!game.isGameOver()) // game has ended in a draw

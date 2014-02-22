@@ -4,20 +4,21 @@ import java.util.Collection;
 
 import net.zomis.aiscores.AbstractScorer;
 import net.zomis.aiscores.ScoreParameters;
-import net.zomis.tttultimate.TTBoard;
 import net.zomis.tttultimate.TTPlayer;
-import net.zomis.tttultimate.TTTUltimateGame;
-import net.zomis.tttultimate.TTTile;
 import net.zomis.tttultimate.TTWinCondition;
-import net.zomis.tttultimate.TicUtils;
+import net.zomis.tttultimate.dry.TTBase;
+import net.zomis.tttultimate.dry.TTController;
 
-public class OpponentShouldNotPlayScorerV3 extends AbstractScorer<TTTUltimateGame, TTTile> {
+public class OpponentShouldNotPlayScorerV3 extends AbstractScorer<TTController, TTBase> {
 
 	@Override
-	public double getScoreFor(TTTile field, ScoreParameters<TTTUltimateGame> scores) {
+	public double getScoreFor(TTBase field, ScoreParameters<TTController> scores) {
 		TTPlayer opponent = scores.getParameters().getCurrentPlayer().next();
-		TTBoard sendToBoard = field.getDestinationBoard();
-		if (TicUtils.isWon(sendToBoard)) // board is won, then opponent should definitely not play there. Let another scorer handle this case
+		TTBase sendToBoard = scores.getAnalyze(NextPosFinder.class).getDestinationBoard(field);
+		if (sendToBoard == null)
+			sendToBoard = field.getParent();
+		
+		if (!sendToBoard.isWon()) // board is won, then opponent should definitely not play there. Let another scorer handle this case
 			return 0;
 		
 		Collection<TTWinCondition> colls = sendToBoard.getWinConds();

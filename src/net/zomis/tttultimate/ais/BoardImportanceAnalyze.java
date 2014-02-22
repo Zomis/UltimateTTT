@@ -5,27 +5,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.zomis.aiscores.PreScorer;
-import net.zomis.tttultimate.TTBoard;
 import net.zomis.tttultimate.TTPlayer;
-import net.zomis.tttultimate.TTTUltimateGame;
 import net.zomis.tttultimate.TTWinCondition;
 import net.zomis.tttultimate.TicUtils;
+import net.zomis.tttultimate.dry.TTBase;
+import net.zomis.tttultimate.dry.TTController;
 
-public class BoardImportanceAnalyze implements PreScorer<TTTUltimateGame> {
+public class BoardImportanceAnalyze implements PreScorer<TTController> {
 	// x AnalyzeHowImportantBoardIs for winning (X, O separately) -- especially in combination with INeedScorer
 
 	@Override
-	public Object analyze(TTTUltimateGame params) {
-		Map<TTBoard, Map<TTPlayer, Double>> importance = new HashMap<>();
+	public Object analyze(TTController params) {
+		Map<TTBase, Map<TTPlayer, Double>> importance = new HashMap<>();
 		
-		for (TTBoard board : TicUtils.getTiles(params)) {
+		for (TTBase board : TicUtils.getAllSubs(params.getGame())) {
 			Map<TTPlayer, Double> map = new HashMap<>();
 			for (TTPlayer player : TTPlayer.values()) {
 				if (!player.isExactlyOnePlayer())
 					continue;
 				
 				double dd = 0;
-				for (TTWinCondition win : TicUtils.getWinCondsWith(board, board.getGame())) {
+				for (TTWinCondition win : TicUtils.getWinCondsWith(board, board.getParent())) {
 					if (win.isWinnable(player)) {
 						dd += 0.5 + win.hasCurrently(player);
 					}
@@ -43,15 +43,17 @@ public class BoardImportanceAnalyze implements PreScorer<TTTUltimateGame> {
 	}
 	
 	public static class BoardImportance {
-		private final Map<TTBoard, Map<TTPlayer, Double>> map;
+		private final Map<TTBase, Map<TTPlayer, Double>> map;
 
-		private BoardImportance(Map<TTBoard, Map<TTPlayer, Double>> data) {
+		private BoardImportance(Map<TTBase, Map<TTPlayer, Double>> data) {
 			this.map = Collections.unmodifiableMap(data);
 		}
-		public Map<TTBoard, Map<TTPlayer, Double>> getMap() {
+		public Map<TTBase, Map<TTPlayer, Double>> getMap() {
 			return map;
 		}
-		public double getImportanceFor(TTBoard board, TTPlayer player) {
+		public double getImportanceFor(TTBase board, TTPlayer player) {
+			if (map.get(board) == null)
+				return 0;
 			return map.get(board).get(player);
 		}
 	}

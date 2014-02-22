@@ -1,6 +1,7 @@
 package net.zomis.tttultimate.dry;
 
 import net.zomis.tttultimate.TTPlayer;
+import net.zomis.tttultimate.ais.NextPosFinder;
 
 public class TTUltimateController extends TTController {
 	
@@ -10,14 +11,10 @@ public class TTUltimateController extends TTController {
 		super(board);
 	}
 
+	private final NextPosFinder pos = new NextPosFinder();
+	
 	public TTBase getDestinationBoard(TTBase base) {
-		TTBase parent = base.getParent();
-		if (parent == null)
-			return null;
-		TTBase grandpa = parent.getParent();
-		if (grandpa == null)
-			return null;
-		return grandpa.getSub(base.getX(), base.getY());
+		return pos.getDestinationBoard(base);
 	}
 
 	@Override
@@ -29,7 +26,7 @@ public class TTUltimateController extends TTController {
 			return false;
 		if (parent.getWonBy().isExactlyOnePlayer())
 			return false;
-		if (grandpa.isGameOver())
+		if (grandpa.isWon())
 			return false;
 		
 		return activeBoard == null || activeBoard == parent || activeBoard.getWonBy() != TTPlayer.NONE;
@@ -40,12 +37,20 @@ public class TTUltimateController extends TTController {
 		tile.setPlayedBy(currentPlayer);
 		activeBoard = getDestinationBoard(tile);
 		nextPlayer();
+		
+		// Check for win condition on tile and if there is a win, cascade to it's parents
+		do {
+			tile.determineWinner();
+			tile = tile.isWon() ? tile.getParent() : null;
+		}
+		while (tile != null);
+		
 		return true;
 	}
 
 	@Override
-	protected void onPlay(TTBase tile) {
+	protected void onReset() {
+		this.activeBoard = null;
 	}
-	
 
 }

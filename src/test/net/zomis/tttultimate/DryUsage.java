@@ -1,31 +1,20 @@
-package net.zomis.tttultimate.dry;
+package test.net.zomis.tttultimate;
 
 import static org.junit.Assert.*;
 import net.zomis.tttultimate.TTPlayer;
 import net.zomis.tttultimate.TTWinCondition;
 import net.zomis.tttultimate.Winnable;
+import net.zomis.tttultimate.dry.TTBase;
+import net.zomis.tttultimate.dry.TTClassicController;
+import net.zomis.tttultimate.dry.TTController;
+import net.zomis.tttultimate.dry.TTFactoryImpl;
+import net.zomis.tttultimate.dry.TTUltimateController;
 
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
 
 public class DryUsage {
-	private static final TTMNKParameters mnk = new TTMNKParameters(3, 3, 3);
-	private static final TTMNKParameters mnkEmpty = new TTMNKParameters(0, 0, 0);
-	
-	private static final TTFactory lastFactory = new TTFactory() {
-		@Override
-		public TTBase construct(TTBase parent, int x, int y) {
-			return new TTBase(parent, x, y, mnkEmpty, null);
-		}
-	};
-	private static final TTFactory secondLastFactory = new TTFactory() {
-		@Override
-		public TTBase construct(TTBase parent, int x, int y) {
-			return new TTBase(parent, x, y, parent.getMNKParameters(), lastFactory);
-		}
-	};
-	
 	private enum Winner implements Winnable {
 		NONE, X, O, XO;
 
@@ -68,7 +57,7 @@ public class DryUsage {
 	
 	@Test
 	public void classicTTTeasyWin() {
-		TTBase classicTTT = new TTBase(null, new TTMNKParameters(3, 3, 2), lastFactory);
+		TTBase classicTTT = new TTFactoryImpl().classicMNK(3, 3, 2);
 		TTController classic = new TTClassicController(classicTTT);
 		
 		assertTrue(classic.play(classicTTT.getSub(1, 1)));
@@ -82,7 +71,7 @@ public class DryUsage {
 	
 	@Test
 	public void classicTTT() {
-		TTBase classicTTT = new TTBase(null, mnk, lastFactory);
+		TTBase classicTTT = new TTFactoryImpl().classicMNK(3, 3, 3);
 		TTController classic = new TTClassicController(classicTTT);
 		
 		// Create the classic TTT win trap
@@ -100,7 +89,7 @@ public class DryUsage {
 	
 	@Test
 	public void ultimate() {
-		TTBase ultimateTTT = new TTBase(null, mnk, secondLastFactory);
+		TTBase ultimateTTT = new TTFactoryImpl().ultimateWithSize(3);
 		TTUltimateController ultimate = new TTUltimateController(ultimateTTT);
 		
 		assertTrue(ultimate.play (2, 6));

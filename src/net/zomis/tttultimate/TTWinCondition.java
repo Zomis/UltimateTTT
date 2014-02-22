@@ -3,9 +3,10 @@ package net.zomis.tttultimate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
-public class TTWinCondition {
+public class TTWinCondition implements Iterable<Winnable> {
 
 	private final List<Winnable> winnables;
 	private final int consecutive;
@@ -13,6 +14,7 @@ public class TTWinCondition {
 	public TTWinCondition(Winnable... winnables) {
 		this(Arrays.asList(winnables));
 	}
+	
 	public TTWinCondition(List<? extends Winnable> winnables) {
 		this(winnables, winnables.size());
 	}
@@ -37,14 +39,6 @@ public class TTWinCondition {
 				i++;
 		}
 		return i;
-	}
-	
-	@Deprecated
-	public TTPlayer determineWinner() {
-		TTPlayer winner = TTPlayer.XO;
-		for (Winnable winnable : winnables)
-			winner = winner.and(winnable.getWonBy());
-		return winner;
 	}
 	
 	public TTPlayer determineWinnerNew() {
@@ -74,6 +68,11 @@ public class TTWinCondition {
 	
 	public int size() {
 		return winnables.size();
+	}
+
+	@Override
+	public Iterator<Winnable> iterator() {
+		return new ArrayList<Winnable>(this.winnables).iterator();
 	}
 	
 }

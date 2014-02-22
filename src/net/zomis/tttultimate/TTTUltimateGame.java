@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import net.zomis.tttultimate.dry.TTUtils2;
+
 public class TTTUltimateGame implements Winnable, HasSub<TTBoard> {
 
 	// Game -> Board -> Tile. Clicking tile forces to click a specific board.
@@ -30,8 +32,6 @@ public class TTTUltimateGame implements Winnable, HasSub<TTBoard> {
 		this(size, "");
 	}
 	public TTTUltimateGame(int size, String history) {
-		// TODO: m,n,k game: http://en.wikipedia.org/wiki/M,n,k-game
-		// TODO: What should extend what? Reduce code duplication. Tile extends Board, or Board extends Tile?
 		this.size = size;
 		this.boards = new TTBoard[size][size];
 		for (int x = 0; x < boards.length; x++) {
@@ -41,20 +41,16 @@ public class TTTUltimateGame implements Winnable, HasSub<TTBoard> {
 		}
 		
 		Collection<TTTile> tiles = new ArrayList<>();
-		for (TTBoard board : TicUtils.getTiles(this)) {
-			for (TTTile tile : TicUtils.getTiles(board)) {
+		for (TTBoard board : TicUtils.getAllSubs(this)) {
+			for (TTTile tile : TicUtils.getAllSubs(board)) {
 				tiles.add(tile);
 			}
 		}
 		this.tilesCollection = Collections.unmodifiableCollection(tiles);
-		this.winConds = TicUtils.setupWins(this);
+		this.winConds = TTUtils2.setupWinsNew(this);
 		
 		this.makeMoves(history);
 		this.history.append(history);
-	}
-	
-	public boolean isPlayable() {
-		return false;
 	}
 	
 	public void makeMoves(String history) throws IllegalStateException, IllegalArgumentException {
@@ -114,7 +110,7 @@ public class TTTUltimateGame implements Winnable, HasSub<TTBoard> {
 	private TTPlayer determineWinner() {
 		TTPlayer winner = TTPlayer.NONE;
 		for (TTWinCondition cond : this.winConds) {
-			winner = winner.or(cond.determineWinner());
+			winner = winner.or(cond.determineWinnerNew());
 		}
 		return winner;
 	}
@@ -174,5 +170,9 @@ public class TTTUltimateGame implements Winnable, HasSub<TTBoard> {
 	@Override
 	public int getConsecutiveRequired() {
 		return this.getSize();
+	}
+	@Override
+	public boolean hasSubs() {
+		return true;
 	}
 }

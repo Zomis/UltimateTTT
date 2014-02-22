@@ -14,7 +14,7 @@ public class TicUtils {
 		return coll;
 	}
 	
-	public static <T> Collection<T> getTiles(HasSub<T> board) {
+	public static <T> Collection<T> getAllSubs(HasSub<T> board) {
 		List<T> list = new ArrayList<>();
 		int sizeX = board.getSizeX();
 		int sizeY = board.getSizeY();
@@ -28,6 +28,7 @@ public class TicUtils {
 	public static List<Winnable> emptyWinnables(HasSub<?> board) {
 		return new ArrayList<>(board.getConsecutiveRequired());
 	}
+	@Deprecated
 	public static <T extends Winnable> List<TTWinCondition> setupWins(HasSub<T> board) {
 		List<Winnable> winnables;
 		if (board.getSizeX() != board.getSizeY())
@@ -64,10 +65,6 @@ public class TicUtils {
 		conds.add(new TTWinCondition(winnables));
 		
 		return conds;
-	}
-
-	public static boolean isWon(Winnable winnable) {
-		return winnable.getWonBy() != TTPlayer.NONE;
 	}
 
 }
