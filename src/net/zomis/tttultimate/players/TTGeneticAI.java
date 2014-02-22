@@ -10,8 +10,8 @@ import net.zomis.aiscores.extra.GeneticInterface;
 import net.zomis.aiscores.extra.ScoreGenetics;
 import net.zomis.fight.FightResults;
 import net.zomis.fight.GameFight;
-import net.zomis.tttultimate.dry.TTBase;
-import net.zomis.tttultimate.dry.TTController;
+import net.zomis.tttultimate.TTBase;
+import net.zomis.tttultimate.games.TTController;
 
 public class TTGeneticAI implements GeneticInterface<TTController, TTBase, TTAI> {
 	private ScoreGenetics<TTController, TTBase, TTAI> genetics;

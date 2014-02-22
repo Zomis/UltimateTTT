@@ -2,8 +2,8 @@ package net.zomis.tttultimate.ais;
 
 import net.zomis.aiscores.AbstractScorer;
 import net.zomis.aiscores.ScoreParameters;
-import net.zomis.tttultimate.dry.TTBase;
-import net.zomis.tttultimate.dry.TTController;
+import net.zomis.tttultimate.TTBase;
+import net.zomis.tttultimate.games.TTController;
 
 public class ImportantForMe extends AbstractScorer<TTController, TTBase> {
 

@@ -1,14 +1,14 @@
 package test.net.zomis.tttultimate;
 
 import static org.junit.Assert.*;
+import net.zomis.tttultimate.TTBase;
+import net.zomis.tttultimate.TTFactoryImpl;
 import net.zomis.tttultimate.TTPlayer;
 import net.zomis.tttultimate.TTWinCondition;
 import net.zomis.tttultimate.Winnable;
-import net.zomis.tttultimate.dry.TTBase;
-import net.zomis.tttultimate.dry.TTClassicController;
-import net.zomis.tttultimate.dry.TTController;
-import net.zomis.tttultimate.dry.TTFactoryImpl;
-import net.zomis.tttultimate.dry.TTUltimateController;
+import net.zomis.tttultimate.games.TTClassicController;
+import net.zomis.tttultimate.games.TTController;
+import net.zomis.tttultimate.games.TTUltimateController;
 
 import org.junit.Test;
 

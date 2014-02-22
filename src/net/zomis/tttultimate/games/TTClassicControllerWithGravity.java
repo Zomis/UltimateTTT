@@ -1,4 +1,6 @@
-package net.zomis.tttultimate.dry;
+package net.zomis.tttultimate.games;
+
+import net.zomis.tttultimate.TTBase;
 
 public class TTClassicControllerWithGravity extends TTClassicController {
 

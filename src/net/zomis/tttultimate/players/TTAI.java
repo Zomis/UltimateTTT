@@ -12,9 +12,9 @@ import net.zomis.aiscores.ScoreParameters;
 import net.zomis.aiscores.ScoreStrategy;
 import net.zomis.aiscores.extra.ParamAndField;
 import net.zomis.aiscores.extra.ScoreUtils;
-import net.zomis.tttultimate.dry.TTBase;
-import net.zomis.tttultimate.dry.TTController;
-import net.zomis.tttultimate.dry.TTUtils2;
+import net.zomis.tttultimate.TTBase;
+import net.zomis.tttultimate.TTUtils2;
+import net.zomis.tttultimate.games.TTController;
 
 public class TTAI implements ScoreStrategy<TTController, TTBase> {
 

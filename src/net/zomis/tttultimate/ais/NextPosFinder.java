@@ -1,8 +1,8 @@
 package net.zomis.tttultimate.ais;
 
 import net.zomis.aiscores.PreScorer;
-import net.zomis.tttultimate.dry.TTBase;
-import net.zomis.tttultimate.dry.TTController;
+import net.zomis.tttultimate.TTBase;
+import net.zomis.tttultimate.games.TTController;
 
 public class NextPosFinder implements PreScorer<TTController> {
 

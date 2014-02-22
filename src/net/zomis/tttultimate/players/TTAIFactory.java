@@ -6,6 +6,8 @@ import net.zomis.aiscores.PreScorer;
 import net.zomis.aiscores.ScoreConfigFactory;
 import net.zomis.aiscores.scorers.Scorers;
 import net.zomis.fight.FightInterface;
+import net.zomis.tttultimate.TTBase;
+import net.zomis.tttultimate.TTFactoryImpl;
 import net.zomis.tttultimate.TTPlayer;
 import net.zomis.tttultimate.ais.BlockOpponentScorer;
 import net.zomis.tttultimate.ais.BoardImportanceAnalyze;
@@ -20,10 +22,8 @@ import net.zomis.tttultimate.ais.OpponentShouldNotPlayScorerV1;
 import net.zomis.tttultimate.ais.OpponentShouldNotPlayScorerV2;
 import net.zomis.tttultimate.ais.OpponentShouldNotPlayScorerV3;
 import net.zomis.tttultimate.ais.WhereCanOpponentSendMe;
-import net.zomis.tttultimate.dry.TTBase;
-import net.zomis.tttultimate.dry.TTController;
-import net.zomis.tttultimate.dry.TTFactoryImpl;
-import net.zomis.tttultimate.dry.TTUltimateController;
+import net.zomis.tttultimate.games.TTController;
+import net.zomis.tttultimate.games.TTUltimateController;
 
 public class TTAIFactory {
 	private final String	name;

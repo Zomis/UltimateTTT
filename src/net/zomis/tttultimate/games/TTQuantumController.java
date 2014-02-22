@@ -1,4 +1,4 @@
-package net.zomis.tttultimate.dry;
+package net.zomis.tttultimate.games;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import net.zomis.tttultimate.TTBase;
+import net.zomis.tttultimate.TTFactoryImpl;
 import net.zomis.tttultimate.TTPlayer;
 import net.zomis.tttultimate.TTWinCondition;
 import net.zomis.tttultimate.TicUtils;

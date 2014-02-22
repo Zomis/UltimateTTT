@@ -2,43 +2,41 @@ package net.zomis.tttultimate.players;
 
 import java.util.Scanner;
 
-import net.zomis.tttultimate.TTBoard;
-import net.zomis.tttultimate.TTTUltimateGame;
-import net.zomis.tttultimate.TTTile;
+import net.zomis.tttultimate.TTBase;
+import net.zomis.tttultimate.games.TTController;
 
 public class TTHuman {
 
 	private Scanner sc = new Scanner(System.in);
 
-	public TTTile play(TTTUltimateGame game) {
-		TTTile chosenTile = null;
+	public TTBase play(TTController game) {
+		TTBase chosenTile = null;
 		do {
-//			board.output();
-			TTBoard active = game.getActiveBoard();
-			if (active != null) {
-				int xx = active.getX();
-				int yy = active.getY();
-				int size = game.getSize();
-				System.out.printf("Active board is within coordinates %d-%d, %d-%d", 
-						xx * size, xx * size + size - 1, 
-						yy * size, yy * size + size - 1);
-				System.out.println();
-			}
-			System.out.print("Input x coordinate: ");
-			int x = input(sc, game);
-			System.out.print("Input y coordinate: ");
-			int y = input(sc, game);
-			chosenTile = game.getTile(x, y);
-			System.out.println("Chosen tile is " + chosenTile + " in board " + game + " playable " + (chosenTile == null ? "XXX" : chosenTile.isPlayable()));
+//			TTBase active = game.getActiveBoard();
+//			if (active != null) {
+//				int xx = active.getX();
+//				int yy = active.getY();
+//				int size = game.getSize();
+//				System.out.printf("Active board is within coordinates %d-%d, %d-%d", 
+//						xx * size, xx * size + size - 1, 
+//						yy * size, yy * size + size - 1);
+//				System.out.println();
+//			}
+//			System.out.print("Input x coordinate: ");
+//			int x = input(sc, game);
+//			System.out.print("Input y coordinate: ");
+//			int y = input(sc, game);
+//			chosenTile = game.getTile(x, y);
+//			System.out.println("Chosen tile is " + chosenTile + " in board " + game + " playable " + (chosenTile == null ? "null" : chosenTile.isPlayable()));
 		}
-		while (chosenTile == null || !chosenTile.isPlayable());
+		while (chosenTile == null || !game.isAllowedPlay(chosenTile));
 		
 		return chosenTile;
 	}
 	
 	private final TTAI logAI = TTAIFactory.best().build();
 	
-	private int input(Scanner sc, TTTUltimateGame board) {
+	private int input(Scanner sc, TTController board) {
 		String next = null;
 		int result = -1;
 		do {

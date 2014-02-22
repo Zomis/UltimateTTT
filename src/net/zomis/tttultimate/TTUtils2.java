@@ -1,13 +1,9 @@
-package net.zomis.tttultimate.dry;
+package net.zomis.tttultimate;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.zomis.tttultimate.HasSub;
-import net.zomis.tttultimate.TTWinCondition;
-import net.zomis.tttultimate.TicUtils;
-import net.zomis.tttultimate.Winnable;
 
 public class TTUtils2 {
 

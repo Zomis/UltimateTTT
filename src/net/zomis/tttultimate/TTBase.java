@@ -1,12 +1,8 @@
-package net.zomis.tttultimate.dry;
+package net.zomis.tttultimate;
 
 import java.util.Collections;
 import java.util.List;
 
-import net.zomis.tttultimate.HasSub;
-import net.zomis.tttultimate.TTPlayer;
-import net.zomis.tttultimate.TTWinCondition;
-import net.zomis.tttultimate.Winnable;
 
 public class TTBase implements Winnable, HasSub<TTBase> {
 	// Container

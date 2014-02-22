@@ -1,8 +1,11 @@
-package net.zomis.tttultimate.dry;
+package net.zomis.tttultimate.games;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import net.zomis.common.Direction8;
+import net.zomis.tttultimate.TTBase;
+import net.zomis.tttultimate.TTFactoryImpl;
 import net.zomis.tttultimate.TTPlayer;
 
 public class TTOthello extends TTController {
@@ -100,7 +103,6 @@ public class TTOthello extends TTController {
 	private boolean isMovePossible(TTPlayer currentPlayer) {
 		for (int xx = 0; xx < this.game.getSizeX(); xx++) {
 			for (int yy = 0; yy < this.game.getSizeY(); yy++) {
-//				if (!this.fieldCover(game.getSub(xx, yy), currentPlayer).isEmpty())
 				if (this.isAllowedPlay(game.getSub(xx, yy)))
 					return true;
 			}

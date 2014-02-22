@@ -1,5 +1,6 @@
-package net.zomis.tttultimate.dry;
+package net.zomis.tttultimate.games;
 
+import net.zomis.tttultimate.TTBase;
 import net.zomis.tttultimate.TTPlayer;
 import net.zomis.tttultimate.ais.NextPosFinder;
 

@@ -4,10 +4,10 @@ import java.util.Collection;
 
 import net.zomis.aiscores.AbstractScorer;
 import net.zomis.aiscores.ScoreParameters;
+import net.zomis.tttultimate.TTBase;
 import net.zomis.tttultimate.TTPlayer;
 import net.zomis.tttultimate.TTWinCondition;
-import net.zomis.tttultimate.dry.TTBase;
-import net.zomis.tttultimate.dry.TTController;
+import net.zomis.tttultimate.games.TTController;
 
 public class BlockOpponentScorer extends AbstractScorer<TTController, TTBase> {
 

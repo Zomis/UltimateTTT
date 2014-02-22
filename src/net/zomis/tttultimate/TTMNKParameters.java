@@ -1,4 +1,4 @@
-package net.zomis.tttultimate.dry;
+package net.zomis.tttultimate;
 
 public class TTMNKParameters {
 

@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.zomis.aiscores.PreScorer;
+import net.zomis.tttultimate.TTBase;
 import net.zomis.tttultimate.TTPlayer;
 import net.zomis.tttultimate.TTWinCondition;
 import net.zomis.tttultimate.TicUtils;
-import net.zomis.tttultimate.dry.TTBase;
-import net.zomis.tttultimate.dry.TTController;
+import net.zomis.tttultimate.games.TTController;
 
 public class BoardImportanceAnalyze implements PreScorer<TTController> {
 	// x AnalyzeHowImportantBoardIs for winning (X, O separately) -- especially in combination with INeedScorer

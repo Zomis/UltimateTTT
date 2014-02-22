@@ -1,11 +1,10 @@
 package test.net.zomis.tttultimate;
 
+import net.zomis.tttultimate.TTBase;
+import net.zomis.tttultimate.TTFactoryImpl;
 import net.zomis.tttultimate.TTPlayer;
-import net.zomis.tttultimate.TTTUltimateGame;
-import net.zomis.tttultimate.TTTile;
-import net.zomis.tttultimate.dry.TTBase;
-import net.zomis.tttultimate.dry.TTController;
-import net.zomis.tttultimate.dry.TTUltimateController;
+import net.zomis.tttultimate.games.TTController;
+import net.zomis.tttultimate.games.TTUltimateController;
 import net.zomis.tttultimate.players.TTAI;
 import net.zomis.tttultimate.players.TTAIFactory;
 import net.zomis.tttultimate.players.TTHuman;
@@ -23,12 +22,11 @@ public class HumanInput {
 	@Ignore
 	public void humanInput() {
 		TTHuman human = new TTHuman();
-		TTTUltimateGame game = new TTTUltimateGame();
-		TTController controller = new TTUltimateController(null);
-		while (!game.isGameOver()) {
-			output(game);
-			human.play(game).playAt();
-			output(game);
+		TTController controller = new TTUltimateController(new TTFactoryImpl().ultimate());
+		while (!controller.isGameOver()) {
+			output(controller);
+			controller.play(human.play(controller));
+			output(controller);
 			
 //			logAI.logScores(game);
 			TTBase tile = ai.play(controller);
@@ -40,10 +38,10 @@ public class HumanInput {
 		human.close();
 	}
 	
-	public void output(TTTUltimateGame game) {
+	public void output(TTController game) {
 		final int RADIX = Character.MAX_RADIX;
-		final int quad = game.getSize() * game.getSize();
-		final int size = game.getSize();
+		final int quad = game.getGame().getSizeX() * game.getGame().getSizeY();
+		final int size = game.getGame().getSizeX();
 		final String pre = "    ";
 		
 		System.out.print(pre + "  ");
@@ -62,8 +60,8 @@ public class HumanInput {
 					out.append(Integer.toString(y, RADIX));
 					out.append('|');
 				}
-				TTTile tile = game.getTile(x, y);
-				out.append(getCharOutput(tile));
+				TTBase tile = game.getGame().getSmallestTile(x, y);
+				out.append(getCharOutput(game, tile));
 				if (x % size == size - 1)
 					out.append('|');
 			}
@@ -78,13 +76,13 @@ public class HumanInput {
 		System.out.println();
 	}
 	
-	public static char getCharOutput(TTTile tile) {
+	public static char getCharOutput(TTController controller, TTBase tile) {
 		TTPlayer player = tile.getWonBy();
 		if (player == null || player == TTPlayer.NONE)
-			return tile.isPlayable() ? '.' : ' ';
+			return controller.isAllowedPlay(tile) ? '.' : ' ';
 		if (player == TTPlayer.XO)
 			return '?';
-		TTPlayer winner = tile.getBoard().getWonBy();
+		TTPlayer winner = tile.getParent().getWonBy();
 		return TTPlayer.isExactlyOnePlayer(winner) && !winner.equals(player) 
 				? '-' : player.toString().charAt(0);
 	}
