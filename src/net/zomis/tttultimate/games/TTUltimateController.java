@@ -2,18 +2,16 @@ package net.zomis.tttultimate.games;
 
 import net.zomis.tttultimate.TTBase;
 import net.zomis.tttultimate.TTPlayer;
-import net.zomis.tttultimate.ais.NextPosFinder;
+import net.zomis.tttultimate.TicUtils;
 
 public class TTUltimateController extends TTController {
-	
-	private TTBase activeBoard = null; // TODO: Extend it to use Map<TTBase, TTBase> activeBoards. Just for fun. Because I can.
+	// TODO: Try making it even more Ultimate by adding one more dimension, and use Map<TTBase, TTBase> activeBoards. Just for fun.
+	private TTBase activeBoard = null;
 	
 	public TTUltimateController(TTBase board) {
 		super(board);
 	}
 
-	private final NextPosFinder nextPosFinder = new NextPosFinder();
-	
 	@Override
 	public boolean isAllowedPlay(TTBase tile) {
 		TTBase area = tile.getParent();
@@ -34,7 +32,7 @@ public class TTUltimateController extends TTController {
 	@Override
 	public boolean performPlay(TTBase tile) {
 		tile.setPlayedBy(currentPlayer);
-		activeBoard = nextPosFinder.getDestinationBoard(tile);
+		activeBoard = TicUtils.getDestinationBoard(tile);
 		nextPlayer();
 		
 		// Check for win condition on tile and if there is a win, cascade to it's parents

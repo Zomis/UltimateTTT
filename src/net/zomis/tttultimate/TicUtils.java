@@ -5,6 +5,28 @@ import java.util.Collection;
 import java.util.List;
 
 public class TicUtils {
+	/**
+	 * Get which board a tile will send the opponent to (in a TTTUltimate context)
+	 * 
+	 * @param tile The tile to be played
+	 * @return The board which the tile directs to
+	 */
+	public static TTBase getDestinationBoard(TTBase tile) {
+		TTBase parent = tile.getParent();
+		if (parent == null)
+			return null;
+		TTBase grandpa = parent.getParent();
+		if (grandpa == null)
+			return null;
+		return grandpa.getSub(tile.getX(), tile.getY());
+	}
+	/**
+	 * Find the win conditions which contains a specific field
+	 * 
+	 * @param field The field to look for
+	 * @param board Where to look for win conditions
+	 * @return A collection which only contains win conditions which contains the field 
+	 */
 	public static <E extends Winnable> Collection<TTWinCondition> getWinCondsWith(E field, HasSub<E> board) {
 		Collection<TTWinCondition> coll = new ArrayList<>();
 		for (TTWinCondition cond : board.getWinConds()) {
@@ -14,6 +36,12 @@ public class TicUtils {
 		return coll;
 	}
 	
+	/**
+	 * Get all smaller tiles/boards in a board
+	 * 
+	 * @param board Board to scan
+	 * @return Collection of all smaller tiles/boards contained in board.
+	 */
 	public static <T> Collection<T> getAllSubs(HasSub<T> board) {
 		List<T> list = new ArrayList<>();
 		int sizeX = board.getSizeX();
@@ -25,6 +53,13 @@ public class TicUtils {
 		}
 		return list;
 	}
+	
+	/**
+	 * Recursively scan for smaller subs
+	 * 
+	 * @param game The outermost object to scan
+	 * @return A collection containing all fields within the specified 'game' which do not have any subs
+	 */
 	public static Collection<TTBase> getAllSmallestFields(TTBase game) {
 		Collection<TTBase> all = new ArrayList<>();
 		
@@ -35,7 +70,12 @@ public class TicUtils {
 		}
 		return all;
 	}
-	
+	/**
+	 * Create win conditions
+	 * 
+	 * @param board The board to create win conditions for
+	 * @return A list of all WinConditions that was created
+	 */
 	public static List<TTWinCondition> setupWins(final HasSub<? extends Winnable> board) {
 		if (!board.hasSubs()) {
 			ArrayList<TTWinCondition> list = new ArrayList<>();

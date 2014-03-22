@@ -15,7 +15,7 @@ public class OpponentShouldNotPlayScorerV1 extends AbstractScorer<TTController, 
 	@Override
 	public double getScoreFor(TTBase field, ScoreParameters<TTController> scores) {
 		TTPlayer opponent = scores.getParameters().getCurrentPlayer().next();
-		TTBase sendToBoard = scores.getAnalyze(NextPosFinder.class).getDestinationBoard(field);
+		TTBase sendToBoard = TicUtils.getDestinationBoard(field);
 		
 		Collection<TTWinCondition> colls = TicUtils.getWinCondsWith(field, sendToBoard);
 		double i = 0;

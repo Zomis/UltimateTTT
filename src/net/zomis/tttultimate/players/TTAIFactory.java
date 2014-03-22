@@ -17,7 +17,6 @@ import net.zomis.tttultimate.ais.INeedScorerV2;
 import net.zomis.tttultimate.ais.INeedScorerV3;
 import net.zomis.tttultimate.ais.INeedScorerV4;
 import net.zomis.tttultimate.ais.ImportantForMe;
-import net.zomis.tttultimate.ais.NextPosFinder;
 import net.zomis.tttultimate.ais.OpponentShouldNotPlayScorerV1;
 import net.zomis.tttultimate.ais.OpponentShouldNotPlayScorerV2;
 import net.zomis.tttultimate.ais.OpponentShouldNotPlayScorerV3;
@@ -42,9 +41,7 @@ public class TTAIFactory {
 	}
 
 	public static TTAIFactory random() {
-		return new TTAIFactory("#AI_Complete_Idiot", new ScoreConfigFactory<TTController, TTBase>()
-				.withPreScorer(new NextPosFinder())
-		);
+		return new TTAIFactory("#AI_Complete_Idiot", new ScoreConfigFactory<TTController, TTBase>());
 	}
 	public static TTAIFactory versionOne() {
 		return new TTAIFactory("#AI_First", 
