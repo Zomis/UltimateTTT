@@ -1,6 +1,6 @@
 package net.zomis.tttultimate.games;
 
-import net.zomis.tttultimate.OnMoveListener2;
+import net.zomis.tttultimate.TTMoveListener;
 import net.zomis.tttultimate.TTBase;
 import net.zomis.tttultimate.TTPlayer;
 
@@ -8,7 +8,7 @@ public abstract class TTController {
 	
 	protected final TTBase game;
 	protected TTPlayer currentPlayer = TTPlayer.X;
-	private OnMoveListener2	moveListener;
+	private TTMoveListener	moveListener;
 	private StringBuilder history;
 
 	public TTController(TTBase board) {
@@ -71,7 +71,7 @@ public abstract class TTController {
 		return game.getWonBy();
 	}
 
-	public void setOnMoveListener(OnMoveListener2 moveListener) {
+	public void setOnMoveListener(TTMoveListener moveListener) {
 		this.moveListener = moveListener;
 	}
 	

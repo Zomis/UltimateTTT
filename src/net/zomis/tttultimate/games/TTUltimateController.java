@@ -6,37 +6,35 @@ import net.zomis.tttultimate.ais.NextPosFinder;
 
 public class TTUltimateController extends TTController {
 	
-	private TTBase activeBoard = null;
+	private TTBase activeBoard = null; // TODO: Extend it to use Map<TTBase, TTBase> activeBoards. Just for fun. Because I can.
 	
 	public TTUltimateController(TTBase board) {
 		super(board);
 	}
 
-	private final NextPosFinder pos = new NextPosFinder();
+	private final NextPosFinder nextPosFinder = new NextPosFinder();
 	
-	public TTBase getDestinationBoard(TTBase base) {
-		return pos.getDestinationBoard(base);
-	}
-
 	@Override
 	public boolean isAllowedPlay(TTBase tile) {
-		TTBase parent = tile.getParent();
-		TTBase grandpa = tile.getParent().getParent();
+		TTBase area = tile.getParent();
+		if (area == null)
+			return false;
+		TTBase game = tile.getParent().getParent();
 		
 		if (!tile.getWonBy().equals(TTPlayer.NONE))
 			return false;
-		if (parent.getWonBy().isExactlyOnePlayer())
+		if (area.getWonBy().isExactlyOnePlayer())
 			return false;
-		if (grandpa.isWon())
+		if (game.isWon())
 			return false;
 		
-		return activeBoard == null || activeBoard == parent || activeBoard.getWonBy() != TTPlayer.NONE;
+		return activeBoard == null || activeBoard == area || activeBoard.getWonBy() != TTPlayer.NONE;
 	}
 
 	@Override
 	public boolean performPlay(TTBase tile) {
 		tile.setPlayedBy(currentPlayer);
-		activeBoard = getDestinationBoard(tile);
+		activeBoard = nextPosFinder.getDestinationBoard(tile);
 		nextPlayer();
 		
 		// Check for win condition on tile and if there is a win, cascade to it's parents

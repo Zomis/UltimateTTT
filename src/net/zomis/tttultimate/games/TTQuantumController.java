@@ -18,11 +18,9 @@ import net.zomis.tttultimate.Winnable;
 public class TTQuantumController extends TTController {
 
 	// http://en.wikipedia.org/wiki/Quantum_tic_tac_toe
+	// TODO: Replay http://www.zomis.net/ttt/TTTWeb.html?mode=Quantum&history=22,23,25,26,27,37,57,67,66,65,64,62,61,52,51,60,51,43 -- no moves available
 	
-	// x Entaglements needs to be seen somehow, ViewStrategy? TTBase.data?
-	// x Classical marks should be subscripted with the letter and subscript of the collapsed move
-	
-	private final Map<TTBase, Integer> subscripts; // TODO: Keep track of the subscripting-entaglements
+	private final Map<TTBase, Integer> subscripts;
 	private TTBase firstPlaced;
 	private Integer collapse;
 	private int counter;
@@ -57,7 +55,6 @@ public class TTQuantumController extends TTController {
 			performCollapse(tile);
 			game.determineWinner();
 			if (game.getWonBy() == TTPlayer.XO) {
-				// TODO: If two players get TTT same time, the player whose TTT has the lowest *maximum* subscript gets one point and the other player 1/2
 				game.setPlayedBy(tieBreak());
 				
 			}
@@ -72,7 +69,7 @@ public class TTQuantumController extends TTController {
 			nextPlayer();
 			if (isEntaglementCycleCreated(tile)) {
 				collapse = counter;
-				// TEST: when a cycle has been created the next player must choose the field that should be collapsed
+				// when a cycle has been created the next player must choose the field that should be collapsed
 			}
 			counter++;
 		}
@@ -125,8 +122,10 @@ public class TTQuantumController extends TTController {
 		for (TTBase ff : TicUtils.getAllSubs(tile.getParent())) {
 			subscripts.remove(ff);
 		}
+		// TODO: Send ViewEvent to allow view to show what is happening step-by-step. Technically, this code should remove all but the tile itself.
 		tile.getParent().reset();
 		tile.getParent().setPlayedBy(winner);
+		// then, when the winner has been declared, the smaller tile can be removed 
 		subscripts.put(tile.getParent(), value);
 		collapseCheck();
 	}
@@ -164,19 +163,6 @@ public class TTQuantumController extends TTController {
 			}
 		}
 		return false;
-		
-//		int oldSize = scannedAreas.size();
-//		while (true) {
-//			if (scannedAreas.contains(area))
-//				return true;
-//			
-//			if (scannedAreas.size() == oldSize)
-//				return false;
-//			throw new UnsupportedOperationException();
-//			
-//		}
-		
-		// TODO: Detect entanglement cycles
 	}
 
 	private void collapseCheck() {

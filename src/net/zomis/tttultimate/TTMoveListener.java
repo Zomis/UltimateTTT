@@ -1,5 +1,5 @@
 package net.zomis.tttultimate;
 
-public interface OnMoveListener2 {
+public interface TTMoveListener {
 	void onMove(TTBase playedAt);
 }

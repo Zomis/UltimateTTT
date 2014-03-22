@@ -1,27 +1,25 @@
 package net.zomis.tttultimate;
 
 public class TTFactoryImpl {
-	// TODO: Return a TTController instead of a TTBase?
-	private static final TTMNKParameters mnk = new TTMNKParameters(3, 3, 3);
 	private static final TTMNKParameters mnkEmpty = new TTMNKParameters(0, 0, 0);
 	
-	private static final TTFactory lastFactory = new TTFactory() {
+	private static final TicFactory lastFactory = new TicFactory() {
 		@Override
 		public TTBase construct(TTBase parent, int x, int y) {
 			return new TTBase(parent, x, y, mnkEmpty, null);
 		}
 	};
-	private static final TTFactory secondLastFactory = new TTFactory() {
+	private static final TicFactory areaFactory = new TicFactory() {
 		@Override
 		public TTBase construct(TTBase parent, int x, int y) {
 			return new TTBase(parent, x, y, parent.getMNKParameters(), lastFactory);
 		}
 	};
 	
-	public static class Factory implements TTFactory {
+	public static class Factory implements TicFactory {
 		private final TTMNKParameters	mnk;
-		private final TTFactory	next;
-		public Factory(TTMNKParameters mnk, TTFactory nextFactory) {
+		private final TicFactory	next;
+		public Factory(TTMNKParameters mnk, TicFactory nextFactory) {
 			this.mnk = mnk;
 			this.next = nextFactory;
 		}
@@ -35,14 +33,16 @@ public class TTFactoryImpl {
 		return new TTBase(null, new TTMNKParameters(width, height, consecutive), lastFactory);
 	}
 	public TTBase classicMNK(int mnk) {
-//		return new TTBase(null, new TTMNKParameters(1, 1, 1), new Factory(new TTMNKParameters(mnk, mnk, mnk), lastFactory));
 		return classicMNK(mnk, mnk, mnk);
 	}
-	public TTBase ultimateWithSize(int i) {
-		return new TTBase(null, mnk, secondLastFactory);
+	public TTBase ultimate(int mnk) {
+		return ultimate(mnk, mnk, mnk);
+	}
+	public TTBase ultimate(int width, int height, int consecutive) {
+		return new TTBase(null, new TTMNKParameters(width, height, consecutive), areaFactory);
 	}
 	public TTBase ultimate() {
-		return ultimateWithSize(3);
+		return ultimate(3);
 	}
 	public TTBase othello(int size) {
 		return new TTBase(null, new TTMNKParameters(size, size, size + 1), lastFactory);

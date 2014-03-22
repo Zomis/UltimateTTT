@@ -8,18 +8,18 @@ public class TTBase implements Winnable, HasSub<TTBase> {
 	// Container
 	private final TTBase[][] subs;
 	private final TTMNKParameters mnkParams;
+	private final List<TTWinCondition> winConditions;
 	
 	// Winnable
-	private final List<TTWinCondition> winConditions;
 	private final TTBase parent;
 	private final int x;
 	private final int y;
 	private TTPlayer playedBy = TTPlayer.NONE;
 	
-	public TTBase(TTBase parent, TTMNKParameters parameters, TTFactory factory) {
+	public TTBase(TTBase parent, TTMNKParameters parameters, TicFactory factory) {
 		this(parent, 0, 0, parameters, factory);
 	}
-	public TTBase(TTBase parent, int x, int y, TTMNKParameters parameters, TTFactory factory) {
+	public TTBase(TTBase parent, int x, int y, TTMNKParameters parameters, TicFactory factory) {
 		this.parent = parent;
 		this.mnkParams = parameters;
 		this.x = x;
@@ -31,7 +31,7 @@ public class TTBase implements Winnable, HasSub<TTBase> {
 				this.subs[xx][yy] = factory.construct(this, xx, yy);
 			}
 		}
-		this.winConditions = Collections.unmodifiableList(TTUtils2.setupWinsNew(this));
+		this.winConditions = Collections.unmodifiableList(TicUtils.setupWins(this));
 	}
 	
 	public void determineWinner() {
@@ -113,7 +113,7 @@ public class TTBase implements Winnable, HasSub<TTBase> {
 	}
 	
 	public void reset() {
-		this.playedBy = TTPlayer.NONE;
+		this.setPlayedBy(TTPlayer.NONE);
 		for (int xx = 0; xx < getSizeX(); xx++) {
 			for (int yy = 0; yy < getSizeY(); yy++) {
 				this.getSub(xx, yy).reset();
@@ -128,7 +128,6 @@ public class TTBase implements Winnable, HasSub<TTBase> {
 		return parent.getX() * parent.getParent().getSizeX() + this.x;
 	}
 	
-	// TODO: Initialize the globalX and Y values from one counter that is controlled by the top-most board?
 	public int getGlobalY() {
 		if (parent == null)
 			return 0;
@@ -138,15 +137,11 @@ public class TTBase implements Winnable, HasSub<TTBase> {
 	}
 	
 	public TTBase getSmallestTile(int x, int y) {
-		// TODO: This is probably not optimal. Works best for boards where all dimensions have the same size. Might work for others too though.
-		
 		int subX = x / getSizeX();
 		int subY = y / getSizeY();
 		TTBase board = getSub(subX, subY);
-		if (board == null) {
-			return getSub(0, 0).getSub(x, y);// TODO: Dirty hack for the way I have organized regular MNK-games
-//			throw new NullPointerException("Null board retreived for " + x + ", " + y + ": sub " + subX + ", " + subY + " size " + getSizeX() + ", " + getSizeY());
-		}
+		if (board == null)
+			throw new NullPointerException("No such smallest tile found: " + x + ", " + y);
 		
 		return board.getSub(x - subX*getSizeX(), y - subY*getSizeY());
 	}

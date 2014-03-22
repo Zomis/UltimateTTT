@@ -13,7 +13,7 @@ import net.zomis.aiscores.ScoreStrategy;
 import net.zomis.aiscores.extra.ParamAndField;
 import net.zomis.aiscores.extra.ScoreUtils;
 import net.zomis.tttultimate.TTBase;
-import net.zomis.tttultimate.TTUtils2;
+import net.zomis.tttultimate.TicUtils;
 import net.zomis.tttultimate.games.TTController;
 
 public class TTAI implements ScoreStrategy<TTController, TTBase> {
@@ -48,7 +48,7 @@ public class TTAI implements ScoreStrategy<TTController, TTBase> {
 	
 	@Override
 	public Collection<TTBase> getFieldsToScore(TTController params) {
-		return TTUtils2.getAllSmallestFields(params.getGame());
+		return TicUtils.getAllSmallestFields(params.getGame());
 	}
 
 	@Override

@@ -89,7 +89,7 @@ public class DryUsage {
 	
 	@Test
 	public void ultimate() {
-		TTBase ultimateTTT = new TTFactoryImpl().ultimateWithSize(3);
+		TTBase ultimateTTT = new TTFactoryImpl().ultimate(3);
 		TTUltimateController ultimate = new TTUltimateController(ultimateTTT);
 		
 		assertTrue(ultimate.play (2, 6));
