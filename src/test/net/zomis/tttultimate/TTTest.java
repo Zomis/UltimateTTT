@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 import net.zomis.fight.FightResults;
 import net.zomis.fight.GameFight;
 import net.zomis.tttultimate.TTBase;
-import net.zomis.tttultimate.TTFactoryImpl;
+import net.zomis.tttultimate.TTFactories;
 import net.zomis.tttultimate.TTPlayer;
 import net.zomis.tttultimate.games.TTController;
 import net.zomis.tttultimate.games.TTControllers;
@@ -97,7 +97,7 @@ public class TTTest {
 		
 	@Test
 	public void cannotPlayWonBoard() {
-		TTBase game = new TTFactoryImpl().ultimate();
+		TTBase game = new TTFactories().ultimate();
 		TTController control = new TTUltimateController(game);
 		
 		assertEquals(TTPlayer.O, TTPlayer.NONE.or(TTPlayer.O));
@@ -140,7 +140,7 @@ public class TTTest {
 	
 	@Test
 	public void historyMove() {
-		TTBase game = new TTFactoryImpl().ultimate();
+		TTBase game = new TTFactories().ultimate();
 		TTController controller = new TTUltimateController(game);
 		controller.makeMoves("44,33,11,34,25,88,87,74,53,71,43,41,45,47");
 		assertEquals(TTPlayer.X, game.getSub(1, 1).getWonBy());
@@ -148,7 +148,7 @@ public class TTTest {
 	
 	@Test
 	public void reset() {
-		TTBase game = new TTFactoryImpl().ultimate();
+		TTBase game = new TTFactories().ultimate();
 		TTUltimateController controller = new TTUltimateController(game);
 		controller.makeMoves("44,33,11,34,25,88,87,74,53,71,43,41,45,47");
 		assertEquals(TTPlayer.X, game.getSub(1, 1).getWonBy());
@@ -169,7 +169,7 @@ public class TTTest {
 	
 	@Test
 	public void winTest() {
-		TTBase game = new TTFactoryImpl().ultimate();
+		TTBase game = new TTFactories().ultimate();
 		TTController controller = new TTUltimateController(game);
 		controller.makeMoves("44,33,11,43,41,53");
 		assertEquals(TTPlayer.O, game.getSub(1, 1).getWonBy());

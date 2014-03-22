@@ -2,7 +2,7 @@ package test.net.zomis.tttultimate;
 
 import static org.junit.Assert.*;
 import net.zomis.tttultimate.TTBase;
-import net.zomis.tttultimate.TTFactoryImpl;
+import net.zomis.tttultimate.TTFactories;
 import net.zomis.tttultimate.TTPlayer;
 import net.zomis.tttultimate.TTWinCondition;
 import net.zomis.tttultimate.Winnable;
@@ -57,7 +57,7 @@ public class DryUsage {
 	
 	@Test
 	public void classicTTTeasyWin() {
-		TTBase classicTTT = new TTFactoryImpl().classicMNK(3, 3, 2);
+		TTBase classicTTT = new TTFactories().classicMNK(3, 3, 2);
 		TTController classic = new TTClassicController(classicTTT);
 		
 		assertTrue(classic.play(classicTTT.getSub(1, 1)));
@@ -71,7 +71,7 @@ public class DryUsage {
 	
 	@Test
 	public void classicTTT() {
-		TTBase classicTTT = new TTFactoryImpl().classicMNK(3, 3, 3);
+		TTBase classicTTT = new TTFactories().classicMNK(3, 3, 3);
 		TTController classic = new TTClassicController(classicTTT);
 		
 		// Create the classic TTT win trap
@@ -89,7 +89,7 @@ public class DryUsage {
 	
 	@Test
 	public void ultimate() {
-		TTBase ultimateTTT = new TTFactoryImpl().ultimate(3);
+		TTBase ultimateTTT = new TTFactories().ultimate(3);
 		TTUltimateController ultimate = new TTUltimateController(ultimateTTT);
 		
 		assertTrue(ultimate.play (2, 6));

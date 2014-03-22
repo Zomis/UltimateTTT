@@ -7,7 +7,7 @@ import net.zomis.aiscores.ScoreConfigFactory;
 import net.zomis.aiscores.scorers.Scorers;
 import net.zomis.fight.FightInterface;
 import net.zomis.tttultimate.TTBase;
-import net.zomis.tttultimate.TTFactoryImpl;
+import net.zomis.tttultimate.TTFactories;
 import net.zomis.tttultimate.TTPlayer;
 import net.zomis.tttultimate.ais.BlockOpponentScorer;
 import net.zomis.tttultimate.ais.BoardImportanceAnalyze;
@@ -100,7 +100,7 @@ public class TTAIFactory {
 	public static class FightImpl implements FightInterface<TTAI> {
 		@Override
 		public TTAI determineWinner(TTAI[] players, int fightNumber) {
-			TTBase board = new TTFactoryImpl().ultimate();
+			TTBase board = new TTFactories().ultimate();
 			TTController game = new TTUltimateController(board);
 			while (!game.isGameOver()) {
 				TTAI pl = playerFor(players, game.getCurrentPlayer());

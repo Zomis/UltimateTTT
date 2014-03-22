@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import net.zomis.tttultimate.TTBase;
-import net.zomis.tttultimate.TTFactoryImpl;
+import net.zomis.tttultimate.TTFactories;
 import net.zomis.tttultimate.TTPlayer;
 import net.zomis.tttultimate.TTWinCondition;
 import net.zomis.tttultimate.TicUtils;
@@ -26,7 +26,7 @@ public class TTQuantumController extends TTController {
 	private int counter;
 	
 	public TTQuantumController() {
-		super(new TTFactoryImpl().ultimate());
+		super(new TTFactories().ultimate());
 		this.subscripts = new HashMap<>();
 		this.onReset();
 	}

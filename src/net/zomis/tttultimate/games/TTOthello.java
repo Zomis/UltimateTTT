@@ -5,7 +5,7 @@ import java.util.List;
 
 import net.zomis.common.Direction8;
 import net.zomis.tttultimate.TTBase;
-import net.zomis.tttultimate.TTFactoryImpl;
+import net.zomis.tttultimate.TTFactories;
 import net.zomis.tttultimate.TTPlayer;
 
 public class TTOthello extends TTController {
@@ -14,7 +14,7 @@ public class TTOthello extends TTController {
 		this(8);
 	}
 	public TTOthello(int size) {
-		super(new TTFactoryImpl().othello(size));
+		super(new TTFactories().othello(size));
 		this.onReset();
 	}
 

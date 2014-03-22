@@ -1,6 +1,6 @@
 package net.zomis.tttultimate;
 
-public class TTFactoryImpl {
+public class TTFactories {
 	private static final TTMNKParameters mnkEmpty = new TTMNKParameters(0, 0, 0);
 	
 	private static final TicFactory lastFactory = new TicFactory() {

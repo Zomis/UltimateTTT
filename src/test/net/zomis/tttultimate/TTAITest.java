@@ -2,7 +2,7 @@ package test.net.zomis.tttultimate;
 
 import static org.junit.Assert.*;
 import net.zomis.tttultimate.TTBase;
-import net.zomis.tttultimate.TTFactoryImpl;
+import net.zomis.tttultimate.TTFactories;
 import net.zomis.tttultimate.games.TTClassicController;
 import net.zomis.tttultimate.games.TTController;
 import net.zomis.tttultimate.games.TTUltimateController;
@@ -34,7 +34,7 @@ public class TTAITest {
 	
 	@Test
 	public void winIsBetterThanPreventLose() {
-		game = new TTFactoryImpl().classicMNK(3);
+		game = new TTFactories().classicMNK(3);
 		controller = new TTClassicController(game);
 		controller.makeMoves("11,21,20,02,00,22");
 		assertMove(game.getSub(0, 0).getSub(1, 0));
@@ -55,7 +55,7 @@ public class TTAITest {
 	}
 
 	private TTController loadGame(String history) {
-		game = new TTFactoryImpl().ultimate();
+		game = new TTFactories().ultimate();
 		controller = new TTUltimateController(game);
 		controller.makeMoves(history);
 		return controller;

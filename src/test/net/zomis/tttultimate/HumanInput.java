@@ -1,7 +1,7 @@
 package test.net.zomis.tttultimate;
 
 import net.zomis.tttultimate.TTBase;
-import net.zomis.tttultimate.TTFactoryImpl;
+import net.zomis.tttultimate.TTFactories;
 import net.zomis.tttultimate.TTPlayer;
 import net.zomis.tttultimate.games.TTController;
 import net.zomis.tttultimate.games.TTUltimateController;
@@ -22,7 +22,7 @@ public class HumanInput {
 	@Ignore
 	public void humanInput() {
 		TTHuman human = new TTHuman();
-		TTController controller = new TTUltimateController(new TTFactoryImpl().ultimate());
+		TTController controller = new TTUltimateController(new TTFactories().ultimate());
 		while (!controller.isGameOver()) {
 			output(controller);
 			controller.play(human.play(controller));
