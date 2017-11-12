@@ -19,8 +19,6 @@ pipeline {
         }
         stage('Results') {
             steps {
-                junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
-
                 withSonarQubeEnv('docker-sonar') {
                     sh 'mvn sonar:sonar'
                 }
@@ -34,6 +32,9 @@ pipeline {
     }
 
     post {
+        always {
+            junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
+        }
         success {
             zpost(0)
         }
