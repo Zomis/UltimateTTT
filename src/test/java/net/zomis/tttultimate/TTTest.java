@@ -1,11 +1,8 @@
-package test.net.zomis.tttultimate;
+package net.zomis.tttultimate;
 
 import static org.junit.Assert.*;
 import net.zomis.fight.FightResults;
 import net.zomis.fight.GameFight;
-import net.zomis.tttultimate.TTBase;
-import net.zomis.tttultimate.TTFactories;
-import net.zomis.tttultimate.TTPlayer;
 import net.zomis.tttultimate.games.TTController;
 import net.zomis.tttultimate.games.TTControllers;
 import net.zomis.tttultimate.games.TTOthello;

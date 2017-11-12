@@ -1,8 +1,5 @@
-package test.net.zomis.tttultimate;
+package net.zomis.tttultimate;
 
-import net.zomis.tttultimate.TTBase;
-import net.zomis.tttultimate.TTFactories;
-import net.zomis.tttultimate.TTPlayer;
 import net.zomis.tttultimate.games.TTController;
 import net.zomis.tttultimate.games.TTUltimateController;
 import net.zomis.tttultimate.players.TTAI;
