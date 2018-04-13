@@ -105,7 +105,7 @@ public class TicUtils {
 		}
 		
 		// Scan diagonals for a winner: Bottom-left
-		for (int xx = 0; xx < board.getSizeY(); xx++) {
+		for (int xx = 0; xx < board.getSizeX(); xx++) {
 			newWin(conds, consecutive, loopAdd(board, xx, 0, -1, 1));
 		}
 		for (int yy = 1; yy < board.getSizeY(); yy++) {
