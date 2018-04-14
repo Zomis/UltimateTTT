@@ -137,12 +137,22 @@ public class TTBase implements Winnable, HasSub<TTBase> {
 	}
 	
 	public TTBase getSmallestTile(int x, int y) {
-		int subX = x / getSizeX();
-		int subY = y / getSizeY();
+		TTBase topLeft = getSub(0, 0);
+		if (topLeft == null) {
+			return null;
+		}
+		boolean grandParent = topLeft.hasSubs();
+
+		if (!grandParent) {
+			return this.getSub(x, y);
+		}
+
+		int subX = x / topLeft.getSizeX();
+		int subY = y / topLeft.getSizeY();
 		TTBase board = getSub(subX, subY);
-		if (board == null)
+		if (board == null) {
 			throw new NullPointerException("No such smallest tile found: " + x + ", " + y);
-		
+		}
 		return board.getSub(x - subX*getSizeX(), y - subY*getSizeY());
 	}
 	

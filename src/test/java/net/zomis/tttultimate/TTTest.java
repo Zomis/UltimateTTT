@@ -142,6 +142,17 @@ public class TTTest {
 		controller.makeMoves("44,33,11,34,25,88,87,74,53,71,43,41,45,47");
 		assertEquals(TTPlayer.X, game.getSub(1, 1).getWonBy());
 	}
+
+	@Test
+	public void smallestTiles() {
+		TTBase game = new TTFactories().ultimate();
+		assertEquals(game.getSub(2, 1).getSub(0, 2), game.getSmallestTile(6, 5));
+		for (int x = 0; x < 9; x++) {
+			for (int y = 0; y < 9; y++) {
+				assertEquals(game.getSub(x / 3, y / 3).getSub(x % 3, y % 3), game.getSmallestTile(x, y));
+			}
+		}
+	}
 	
 	@Test
 	public void reset() {
