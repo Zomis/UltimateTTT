@@ -1,8 +1,6 @@
 package net.zomis.tttultimate
 
-import java.util.ArrayList
-
-object TicUtils {
+class TicUtils {
     /**
      * Get which board a tile will send the opponent to (in a TTTUltimate context)
      *
@@ -10,9 +8,9 @@ object TicUtils {
      * @return The board which the tile directs to
      */
     fun getDestinationBoard(tile: TTBase): TTBase? {
-        val parent = tile.getParent() ?: return null
-        val grandpa = parent.getParent() ?: return null
-        return grandpa!!.getSub(tile.getX(), tile.getY())
+        val parent = tile.parent ?: return null
+        val grandpa = parent.parent ?: return null
+        return grandpa.getSub(tile.x, tile.y)
     }
 
     /**
@@ -23,10 +21,11 @@ object TicUtils {
      * @return A collection which only contains win conditions which contains the field
      */
     fun <E : Winnable> getWinCondsWith(field: E, board: HasSub<E>): Collection<TTWinCondition> {
-        val coll = ArrayList()
+        val coll = mutableListOf<TTWinCondition>()
         for (cond in board.winConds) {
-            if (cond.hasWinnable(field))
+            if (cond.hasWinnable(field)) {
                 coll.add(cond)
+            }
         }
         return coll
     }
@@ -38,12 +37,12 @@ object TicUtils {
      * @return Collection of all smaller tiles/boards contained in board.
      */
     fun <T> getAllSubs(board: HasSub<T>): Collection<T> {
-        val list = ArrayList()
+        val list = mutableListOf<T>()
         val sizeX = board.sizeX
         val sizeY = board.sizeY
         for (x in 0 until sizeX) {
             for (y in 0 until sizeY) {
-                list.add(board.getSub(x, y))
+                list.add(board.getSub(x, y)!!)
             }
         }
         return list
@@ -56,13 +55,14 @@ object TicUtils {
      * @return A collection containing all fields within the specified 'game' which do not have any subs
      */
     fun getAllSmallestFields(game: TTBase): Collection<TTBase> {
-        val all = ArrayList()
+        val all = mutableListOf<TTBase>()
 
-        for (sub in TicUtils.getAllSubs<TTBase>(game)) {
-            if (sub.hasSubs())
+        for (sub in getAllSubs(game)) {
+            if (sub.hasSubs()) {
                 all.addAll(getAllSmallestFields(sub))
-            else
+            } else {
                 all.add(sub)
+            }
         }
         return all
     }
@@ -73,15 +73,15 @@ object TicUtils {
      * @param board The board to create win conditions for
      * @return A list of all WinConditions that was created
      */
-    fun setupWins(board: HasSub<out Winnable>): List<TTWinCondition> {
+    fun setupWins(board: HasSub<Winnable>): List<TTWinCondition> {
         if (!board.hasSubs()) {
-            val list = ArrayList()
+            val list = mutableListOf<TTWinCondition>()
             list.add(TTWinCondition(board))
             return list
         }
 
         val consecutive = board.consecutiveRequired
-        val conds = ArrayList()
+        val conds = mutableListOf<TTWinCondition>()
 
         // Scan columns for a winner
         for (xx in 0 until board.sizeX) {
@@ -112,17 +112,18 @@ object TicUtils {
         return conds
     }
 
-    private fun newWin(conds: List<TTWinCondition>, consecutive: Int, winnables: List<Winnable>) {
-        if (winnables.size() >= consecutive)
+    private fun newWin(conds: MutableList<TTWinCondition>, consecutive: Int, winnables: List<Winnable>) {
         // shorter win conditions doesn't need to be added as they will never be able to win
+        if (winnables.size >= consecutive) {
             conds.add(TTWinCondition(winnables, consecutive))
+        }
     }
 
-    private fun loopAdd(board: HasSub<out Winnable>,
-                        xx: Int, yy: Int, dx: Int, dy: Int): List<Winnable> {
-        var xx = xx
-        var yy = yy
-        val winnables = ArrayList()
+    private fun loopAdd(board: HasSub<Winnable>,
+                        xxStart: Int, yyStart: Int, dx: Int, dy: Int): List<Winnable> {
+        var xx = xxStart
+        var yy = yyStart
+        val winnables = mutableListOf<Winnable>()
 
         var tile: Winnable?
         do {

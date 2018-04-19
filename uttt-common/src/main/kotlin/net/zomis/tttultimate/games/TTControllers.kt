@@ -2,8 +2,7 @@ package net.zomis.tttultimate.games
 
 import net.zomis.tttultimate.TTFactories
 
-
-object TTControllers {
+class TTControllers {
 
     fun connectFour(): TTController {
         return TTClassicControllerWithGravity(TTFactories().classicMNK(7, 6, 4))

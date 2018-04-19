@@ -1,42 +1,35 @@
 package net.zomis.tttultimate.games
 
 import net.zomis.tttultimate.*
-import java.util.HashMap
-import java.util.HashSet
-import kotlin.collections.Map.Entry
-
 
 class TTQuantumController : TTController(TTFactories().ultimate()) {
 
     // http://en.wikipedia.org/wiki/Quantum_tic_tac_toe
     // TODO: Replay http://www.zomis.net/ttt/TTTWeb.html?mode=Quantum&history=22,23,25,26,27,37,57,67,66,65,64,62,61,52,51,60,51,43 -- no moves available
 
-    private val subscripts: Map<TTBase, Integer>
+    private val subscripts = mutableMapOf<TTBase, Int>()
     private var firstPlaced: TTBase? = null
-    private var collapse: Integer? = null
+    private var collapse: Int? = null
     private var counter: Int = 0
 
     init {
-        this.subscripts = HashMap()
         this.onReset()
     }
 
-    @Override
     override fun isAllowedPlay(tile: TTBase): Boolean {
-        if (collapse == null && tile.isWon)
+        if (collapse == null && tile.isWon) {
             return false
+        }
 
         if (collapse != null) {
             return subscripts[tile] === collapse
         }
-
 
         return if (firstPlaced != null) { // x Play two moves before switching, not on the same board
             tile.parent != firstPlaced
         } else !tile.isWon && !tile.parent!!.isWon
     }
 
-    @Override
     override fun performPlay(tile: TTBase): Boolean {
         if (collapse != null) {
             collapse = null
@@ -83,7 +76,7 @@ class TTQuantumController : TTController(TTFactories().ultimate()) {
         var highest = 0
         for (tile in cond) {
             val value = subscripts[tile] ?: throw NullPointerException("Position doesn't have a subscript: $cond")
-            highest = Math.max(highest, value)
+            highest = if (highest >= value) highest else value
         }
         return highest
     }
@@ -104,9 +97,9 @@ class TTQuantumController : TTController(TTFactories().ultimate()) {
         }
 
         val winner = tile.wonBy
-        val value = subscripts.remove(tile)
+        val value = subscripts.remove(tile)!!
 
-        for (ff in TicUtils.getAllSubs(tile.parent)) {
+        for (ff in TicUtils().getAllSubs(tile.parent)) {
             subscripts.remove(ff)
         }
         // TODO: Send ViewEvent to allow view to show what is happening step-by-step. Technically, this code should remove all but the tile itself.
@@ -117,18 +110,19 @@ class TTQuantumController : TTController(TTFactories().ultimate()) {
         collapseCheck()
     }
 
-    private fun isEntaglementCycleCreated(tile: TTBase, scannedAreas: Set<TTBase> = HashSet(), scannedTiles: Set<TTBase> = HashSet()): Boolean {
+    private fun isEntaglementCycleCreated(tile: TTBase, scannedAreas: MutableSet<TTBase> = HashSet(), scannedTiles: MutableSet<TTBase> = HashSet()): Boolean {
         if (tile.parent == null || tile.hasSubs())
             throw IllegalArgumentException()
 
         scannedTiles.add(tile)
-        if (scannedAreas.contains(tile.parent))
+        if (scannedAreas.contains(tile.parent)) {
             return true
+        }
         scannedAreas.add(tile.parent)
 
         val area = tile.parent
 
-        val subs = TicUtils.getAllSubs(area)
+        val subs = TicUtils().getAllSubs(area)
         for (sub in subs) {
             if (sub == tile)
                 continue
@@ -152,19 +146,20 @@ class TTQuantumController : TTController(TTFactories().ultimate()) {
     private fun collapseCheck() {
         // TEST: When a field does not have an entaglement anymore, collapse it
 
-        for (ee in HashMap(this.subscripts).entrySet()) {
+        for (ee in this.subscripts.entries) {
             // remove those that should be removed first, to make a clean scan later
-            if (!ee.getKey().isWon()) {
-                subscripts.remove(ee.getKey())
+            if (!ee.key.isWon) {
+                subscripts.remove(ee.key)
             }
         }
 
-        for (ee in this.subscripts.entrySet()) {
-            if (ee.getKey().hasSubs())
+        for (ee in this.subscripts.entries) {
+            if (ee.key.hasSubs()) {
                 continue
-            val match = findEntanglement(ee.getKey())
+            }
+            val match = findEntanglement(ee.key)
             if (match == null) {
-                performCollapse(ee.getKey())
+                performCollapse(ee.key)
                 collapseCheck()
                 return
             }
@@ -175,17 +170,17 @@ class TTQuantumController : TTController(TTFactories().ultimate()) {
         if (!subscripts.containsKey(key))
             return null
         val match = subscripts[key]
-        for (ee in this.subscripts.entrySet()) {
-            if (ee.getKey() === key)
+        for (ee in this.subscripts.entries) {
+            if (ee.key == key) {
                 continue
-            if (ee.getValue() === match) {
-                return ee.getKey()
+            }
+            if (ee.value == match) {
+                return ee.key
             }
         }
         return null
     }
 
-    @Override
     override fun onReset() {
         this.subscripts.clear()
         this.collapse = null
@@ -193,13 +188,12 @@ class TTQuantumController : TTController(TTFactories().ultimate()) {
         this.counter = 1
     }
 
-    @Override
     override fun getViewFor(tile: TTBase): String {
-        var tile = tile
-        if (!tile.isWon && tile.parent!!.isWon) {
-            tile = tile.parent
+        var tileParent: TTBase? = tile
+        if (!tileParent?.isWon!! && tileParent.parent!!.isWon) {
+            tileParent = tileParent.parent
         }
-        val sub = subscripts[tile]
+        val sub = subscripts[tileParent]
         return super.getViewFor(tile) + (sub ?: "")
     }
 

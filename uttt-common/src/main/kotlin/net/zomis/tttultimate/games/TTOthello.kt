@@ -1,18 +1,15 @@
 package net.zomis.tttultimate.games
 
-import java.util.ArrayList
-
-import net.zomis.common.Direction8
+import net.zomis.tttultimate.Direction8
 import net.zomis.tttultimate.TTBase
 import net.zomis.tttultimate.TTFactories
 import net.zomis.tttultimate.TTPlayer
 
-class TTOthello @JvmOverloads constructor(size: Int = 8) : TTController(TTFactories().othello(size)) {
+class TTOthello constructor(size: Int = 8) : TTController(TTFactories().othello(size)) {
     init {
         this.onReset()
     }
 
-    @Override
     override fun isAllowedPlay(tile: TTBase): Boolean {
         if (game.isWon)
             return false
@@ -25,14 +22,14 @@ class TTOthello @JvmOverloads constructor(size: Int = 8) : TTController(TTFactor
         if (!player.isExactlyOnePlayer)
             throw IllegalArgumentException()
 
-        val tt = ArrayList()
+        val tt = mutableListOf<TTBase>()
         val parent = tile.parent
         for (dir in Direction8.values()) {
             var matchFound = false
-            val thisDirection = ArrayList()
+            val thisDirection = mutableListOf<TTBase>()
             var loop: TTBase? = tile
             do {
-                loop = parent!!.getSub(loop!!.x + dir.getDeltaX(), loop.y + dir.getDeltaY())
+                loop = parent!!.getSub(loop!!.x + dir.deltaX, loop.y + dir.deltaY)
                 if (loop == null)
                     break
                 if (loop.wonBy === TTPlayer.NONE)
@@ -52,8 +49,6 @@ class TTOthello @JvmOverloads constructor(size: Int = 8) : TTController(TTFactor
         return tt
     }
 
-
-    @Override
     override fun performPlay(tile: TTBase): Boolean {
         val convertingTiles = fieldCover(tile, currentPlayer)
         for (ff in convertingTiles) {
@@ -102,7 +97,6 @@ class TTOthello @JvmOverloads constructor(size: Int = 8) : TTController(TTFactor
         return false
     }
 
-    @Override
     override fun onReset() {
         val board = this.game
         board.reset()

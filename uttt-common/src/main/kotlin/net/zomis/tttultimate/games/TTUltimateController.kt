@@ -8,7 +8,6 @@ class TTUltimateController(board: TTBase) : TTController(board) {
     // TODO: Try making it even more Ultimate by adding one more dimension, and use Map<TTBase, TTBase> activeBoards. Just for fun.
     private var activeBoard: TTBase? = null
 
-    @Override
     override fun isAllowedPlay(tile: TTBase): Boolean {
         val area = tile.parent ?: return false
         val game = tile.parent.parent
@@ -18,26 +17,23 @@ class TTUltimateController(board: TTBase) : TTController(board) {
         if (area.wonBy.isExactlyOnePlayer)
             return false
         return if (game!!.isWon) false else activeBoard == null || activeBoard == area || activeBoard!!.wonBy !== TTPlayer.NONE
-
     }
 
-    @Override
-    public override fun performPlay(tile: TTBase): Boolean {
-        var tile = tile
+    override fun performPlay(tile: TTBase): Boolean {
         tile.setPlayedBy(currentPlayer)
-        activeBoard = TicUtils.getDestinationBoard(tile)
+        activeBoard = TicUtils().getDestinationBoard(tile)
         nextPlayer()
 
         // Check for win condition on tile and if there is a win, cascade to it's parents
+        var playAt: TTBase? = tile
         do {
-            tile.determineWinner()
-            tile = if (tile.isWon) tile.parent else null
-        } while (tile != null)
+            playAt?.determineWinner()
+            playAt = if (playAt!!.isWon) playAt.parent else null
+        } while (playAt != null)
 
         return true
     }
 
-    @Override
     override fun onReset() {
         this.activeBoard = null
     }

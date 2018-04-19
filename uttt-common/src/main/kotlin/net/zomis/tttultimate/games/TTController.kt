@@ -8,17 +8,15 @@ abstract class TTController(val game: TTBase) {
     var currentPlayer = TTPlayer.X
         protected set
     private var moveListener: TTMoveListener? = null
-    private var history: StringBuilder? = null
+    private var history: StringBuilder = StringBuilder()
+
+    val CHARS = ('0'..'9') + ('a'..'z') + ('A'..'Z')
 
     val isGameOver: Boolean
         get() = game.isWon
 
     val wonBy: TTPlayer
         get() = game.wonBy
-
-    init {
-        this.history = StringBuilder()
-    }
 
     abstract fun isAllowedPlay(tile: TTBase): Boolean
 
@@ -41,10 +39,11 @@ abstract class TTController(val game: TTBase) {
     }
 
     private fun addToHistory(tile: TTBase) {
-        if (history!!.length() > 0)
-            history!!.append(",")
-        history!!.append(Integer.toString(tile.globalX, Character.MAX_RADIX))
-        history!!.append(Integer.toString(tile.globalY, Character.MAX_RADIX))
+        if (!history.isEmpty()) {
+            history.append(",")
+        }
+        history.append(CHARS[tile.globalX])
+        history.append(CHARS[tile.globalY])
     }
 
     protected abstract fun performPlay(tile: TTBase): Boolean
@@ -61,17 +60,16 @@ abstract class TTController(val game: TTBase) {
         this.moveListener = moveListener
     }
 
-
-    @Throws(IllegalStateException::class, IllegalArgumentException::class)
     fun makeMoves(history: String) {
         for (move in history.split(",")) {
             if (move.isEmpty())
                 continue
-            if (move.length() !== 2)
+            if (move.length != 2) {
                 throw IllegalArgumentException("Unexcepted move length. $move")
+            }
 
-            val x = Integer.parseInt(String.valueOf(move.charAt(0)), Character.MAX_RADIX)
-            val y = Integer.parseInt(String.valueOf(move.charAt(1)), Character.MAX_RADIX)
+            val x = CHARS.indexOf(move[0])
+            val y = CHARS.indexOf(move[1])
 
             val tile = game.getSmallestTile(x, y)
             if (!this.play(tile))
@@ -80,7 +78,7 @@ abstract class TTController(val game: TTBase) {
     }
 
     fun saveHistory(): String {
-        return this.history!!.toString()
+        return this.history.toString()
     }
 
     fun reset() {
