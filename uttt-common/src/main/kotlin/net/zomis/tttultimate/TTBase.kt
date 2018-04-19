@@ -1,21 +1,21 @@
 package net.zomis.tttultimate
 
 class TTBase(val parent: TTBase?, val x: Int, val y: Int,
-     val mnkParameters: TTMNKParameters, factory: TicFactory?) : Winnable, HasSub<TTBase> {
+     val mnkParameters: TTMNKParameters, factory: TicFactory?) {
 
     private val subs: Array<Array<TTBase>>
 
-    override val winConds: List<TTWinCondition>
+    val winConds: List<TTWinCondition>
 
-    override var wonBy: TTPlayer = TTPlayer.NONE
+    var wonBy: TTPlayer = TTPlayer.NONE
 
-    override val sizeX: Int
+    val sizeX: Int
         get() = this.mnkParameters.width
 
-    override val sizeY: Int
+    val sizeY: Int
         get() = this.mnkParameters.height
 
-    override val consecutiveRequired: Int
+    val consecutiveRequired: Int
         get() = this.mnkParameters.consecutiveRequired
 
     val isWon: Boolean
@@ -56,7 +56,7 @@ class TTBase(val parent: TTBase?, val x: Int, val y: Int,
         this.wonBy = winner
     }
 
-    override fun getSub(x: Int, y: Int): TTBase? {
+    fun getSub(x: Int, y: Int): TTBase? {
         if (!hasSubs() && x == 0 && y == 0) {
             return this
         }
@@ -70,7 +70,7 @@ class TTBase(val parent: TTBase?, val x: Int, val y: Int,
         this.wonBy = playedBy
     }
 
-    override fun hasSubs(): Boolean {
+    fun hasSubs(): Boolean {
         return sizeX != 0 && sizeY != 0
     }
 
