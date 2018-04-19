@@ -17,15 +17,15 @@ pipeline {
                 sh './gradlew clean install --stacktrace --debug'
             }
         }
-        stage('Results') {
 /*
+        stage('Results') {
             steps {
                 withSonarQubeEnv('docker-sonar') {
                     sh 'mvn sonar:sonar'
                 }
             }
-*/
         }
+*/
         stage('Release check') {
             steps {
                 sh './gradlew uploadArchives'
