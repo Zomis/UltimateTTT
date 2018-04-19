@@ -1,0 +1,4 @@
+rootProject.name = 'uttt'
+include 'uttt-common'
+include 'uttt-js'
+include 'uttt-jvm'

@@ -1,0 +1,45 @@
+buildscript {
+    ext.kotlinVersion = "1.2.30"
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.junit.platform:junit-platform-gradle-plugin:1.0.1"
+    }
+}
+
+apply plugin: "kotlin-platform-jvm"
+apply plugin: "org.junit.platform.gradle.plugin"
+
+group 'net.zomis'
+version '0.3.0-SNAPSHOT'
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven {
+        url "http://www.zomis.net/maven"
+    }
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+    expectedBy project(":uttt-common")
+
+    compile "net.zomis:fights:0.2"
+    compile 'net.zomis:scorers:0.2'
+
+    testCompile "org.junit.jupiter:junit-jupiter-api:5.1.1"
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.1.1"
+}

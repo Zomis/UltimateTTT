@@ -1,0 +1,70 @@
+group 'net.zomis'
+version '0.3.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' } // KLogging
+    }
+}
+
+def getMavenSettingsCredentials() {
+    String userHome = System.getProperty('user.home')
+    File mavenSettings = new File(userHome, '.m2/settings.xml')
+    if (!mavenSettings.exists()) {
+        return []
+    }
+    def xmlSlurper = new XmlSlurper()
+    def output = xmlSlurper.parse(mavenSettings)
+    return output."servers"."server"
+}
+
+def getCredentials() {
+    def entries = getMavenSettingsCredentials()
+    for (entry in entries) {
+        if (entry."id".text() == 'zomisnet') {
+            return [username: entry.username.text(), password: entry.password.text()]
+        }
+    }
+    return [username: 'invalid', password: 'invalid']
+}
+
+subprojects {
+    configurations {
+        deployerJars
+    }
+
+    dependencies {
+        deployerJars 'org.apache.maven.wagon:wagon-ftp:2.2'
+    }
+
+    apply plugin: 'maven'
+
+    uploadArchives {
+        def creds = getCredentials()
+        if (!creds) {
+            return
+        }
+        repositories {
+            mavenDeployer {
+                configuration = configurations.deployerJars
+                repository(url: "ftp://www.zomis.net/public_html/maven") {
+                    authentication(userName: creds["username"], password: creds["password"])
+                }
+            }
+        }
+    }
+//
+//    task("uploadJars", type: uploadArchives, dependsOn: build) {
+//        def creds = getCredentials()
+//        repositories.mavenDeployer {
+//            configuration = configurations.deployerJars
+//            repository(url: "ftp://www.zomis.net/public_html/maven") {
+//                authentication(userName: System.getenv()['FTPUserName'], password: System.getenv()['FTPPassword'])
+//            }
+//        }
+//    }
+}
