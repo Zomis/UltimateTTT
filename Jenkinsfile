@@ -14,19 +14,22 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                sh './gradlew clean install --stacktrace --debug'
             }
         }
         stage('Results') {
+/*
             steps {
                 withSonarQubeEnv('docker-sonar') {
                     sh 'mvn sonar:sonar'
                 }
             }
+*/
         }
         stage('Release check') {
             steps {
-                zreleaseMaven()
+                sh './gradlew uploadArchives'
+//                zreleaseMaven()
             }
         }
     }
