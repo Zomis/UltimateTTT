@@ -1,6 +1,6 @@
 package net.zomis.tttultimate
 
-class TicUtils {
+object TicUtils {
     /**
      * Get which board a tile will send the opponent to (in a TTTUltimate context)
      *

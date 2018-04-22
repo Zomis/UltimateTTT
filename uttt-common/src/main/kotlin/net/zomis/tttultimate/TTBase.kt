@@ -45,7 +45,7 @@ class TTBase(val parent: TTBase?, val x: Int, val y: Int,
                 factory!!.invoke(this, xx, yy)
             }
         }
-        this.winConds = TicUtils().setupWins(this)
+        this.winConds = TicUtils.setupWins(this)
     }
 
     fun determineWinner() {
