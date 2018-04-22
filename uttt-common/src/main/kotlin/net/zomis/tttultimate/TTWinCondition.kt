@@ -1,15 +1,15 @@
 package net.zomis.tttultimate
 
-class TTWinCondition : Iterable<TTBase> {
+class TTWinCondition : Iterable<Winnable> {
 
-    private val winnables: List<TTBase>
+    private val winnables: List<Winnable>
     private val consecutive: Int
 
-    constructor(vararg winnables: TTBase) : this(winnables.toList())
+    constructor(vararg winnables: Winnable) : this(winnables.toList())
 
-    constructor(winnables: List<TTBase>) : this(winnables, winnables.size)
+    constructor(winnables: List<Winnable>) : this(winnables, winnables.size)
 
-    constructor(winnables: List<TTBase>, consecutive: Int) {
+    constructor(winnables: List<Winnable>, consecutive: Int) {
         if (winnables.isEmpty()) {
             throw IllegalArgumentException("Can't have an empty win condition!")
         }
@@ -57,7 +57,7 @@ class TTWinCondition : Iterable<TTBase> {
         return winner
     }
 
-    fun hasWinnable(field: TTBase): Boolean {
+    fun hasWinnable(field: Winnable): Boolean {
         return winnables.contains(field)
     }
 
@@ -65,7 +65,7 @@ class TTWinCondition : Iterable<TTBase> {
         return winnables.size
     }
 
-    override fun iterator(): Iterator<TTBase> {
+    override fun iterator(): Iterator<Winnable> {
         return this.winnables.toMutableList().iterator()
     }
 

@@ -20,7 +20,7 @@ object TicUtils {
      * @param board Where to look for win conditions
      * @return A collection which only contains win conditions which contains the field
      */
-    fun getWinCondsWith(field: TTBase, board: TTBase): Collection<TTWinCondition> {
+    fun <E : Winnable> getWinCondsWith(field: E, board: HasSub<E>): Collection<TTWinCondition> {
         val coll = mutableListOf<TTWinCondition>()
         for (cond in board.winConds) {
             if (cond.hasWinnable(field)) {
@@ -36,8 +36,8 @@ object TicUtils {
      * @param board Board to scan
      * @return Collection of all smaller tiles/boards contained in board.
      */
-    fun getAllSubs(board: TTBase): Collection<TTBase> {
-        val list = mutableListOf<net.zomis.tttultimate.TTBase>()
+    fun <T> getAllSubs(board: HasSub<T>): Collection<T> {
+        val list = mutableListOf<T>()
         val sizeX = board.sizeX
         val sizeY = board.sizeY
         for (x in 0 until sizeX) {
@@ -73,7 +73,7 @@ object TicUtils {
      * @param board The board to create win conditions for
      * @return A list of all WinConditions that was created
      */
-    fun setupWins(board: TTBase): List<TTWinCondition> {
+    fun setupWins(board: HasSub<Winnable>): List<TTWinCondition> {
         if (!board.hasSubs()) {
             val list = mutableListOf<TTWinCondition>()
             list.add(TTWinCondition(board))
@@ -112,20 +112,20 @@ object TicUtils {
         return conds
     }
 
-    private fun newWin(conds: MutableList<TTWinCondition>, consecutive: Int, winnables: List<TTBase>) {
+    private fun newWin(conds: MutableList<TTWinCondition>, consecutive: Int, winnables: List<Winnable>) {
         // shorter win conditions doesn't need to be added as they will never be able to win
         if (winnables.size >= consecutive) {
             conds.add(TTWinCondition(winnables, consecutive))
         }
     }
 
-    private fun loopAdd(board: TTBase,
-                        xxStart: Int, yyStart: Int, dx: Int, dy: Int): List<TTBase> {
+    private fun loopAdd(board: HasSub<Winnable>,
+                        xxStart: Int, yyStart: Int, dx: Int, dy: Int): List<Winnable> {
         var xx = xxStart
         var yy = yyStart
-        val winnables = mutableListOf<TTBase>()
+        val winnables = mutableListOf<Winnable>()
 
-        var tile: TTBase?
+        var tile: Winnable?
         do {
             tile = board.getSub(xx, yy)
             xx += dx
