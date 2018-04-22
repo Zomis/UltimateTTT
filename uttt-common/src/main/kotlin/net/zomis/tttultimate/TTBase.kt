@@ -42,7 +42,7 @@ class TTBase(val parent: TTBase?, val x: Int, val y: Int,
     init {
         this.subs = Array(mnkParameters.width) { xx ->
             Array(mnkParameters.height) { yy ->
-                factory!!.construct(this, xx, yy)
+                factory!!.invoke(this, xx, yy)
             }
         }
         this.winConds = TicUtils().setupWins(this)

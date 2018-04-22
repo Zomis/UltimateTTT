@@ -2,10 +2,8 @@ package net.zomis.tttultimate
 
 class TTFactories {
 
-    class Factory(private val mnk: TTMNKParameters, private val next: TicFactory) : TicFactory {
-        override fun construct(parent: TTBase, x: Int, y: Int): TTBase {
-            return TTBase(parent, x, y, mnk, next)
-        }
+    fun factory(mnk: TTMNKParameters, next: TicFactory): TicFactory {
+        return {parent, x, y -> TTBase(parent, x, y, mnk, next) }
     }
 
     fun classicMNK(width: Int, height: Int, consecutive: Int): TTBase {
@@ -28,20 +26,14 @@ class TTFactories {
         return TTBase(null, TTMNKParameters(size, size, size + 1), lastFactory)
     }
 
-    companion object {
-        private val mnkEmpty = TTMNKParameters(0, 0, 0)
+    private val mnkEmpty = TTMNKParameters(0, 0, 0)
 
-        private val lastFactory = object : TicFactory {
-            override fun construct(parent: TTBase, x: Int, y: Int): TTBase {
-                return TTBase(parent, x, y, mnkEmpty, null)
-            }
-        }
-        private val areaFactory = object : TicFactory {
-            override fun construct(parent: TTBase, x: Int, y: Int): TTBase {
-                return TTBase(parent, x, y, parent.mnkParameters, lastFactory)
-            }
-        }
+    private val lastFactory: TicFactory = {parent, x, y ->
+        TTBase(parent, x, y, mnkEmpty, null)
     }
 
+    private val areaFactory: TicFactory = {parent, x, y ->
+        TTBase(parent, x, y, parent.mnkParameters, lastFactory)
+    }
 
 }
