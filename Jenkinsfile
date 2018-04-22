@@ -14,7 +14,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh './gradlew clean install --stacktrace --debug'
+                sh './gradlew clean test install --stacktrace --debug'
             }
         }
 /*
@@ -36,7 +36,7 @@ pipeline {
 
     post {
         always {
-            junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
+            junit allowEmptyResults: true, testResults: '**/build/test-results/junit-platform/TEST-*.xml'
         }
         success {
             zpost(0)
