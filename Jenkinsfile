@@ -29,7 +29,6 @@ pipeline {
         stage('Release check') {
             steps {
                 sh './gradlew uploadArchives'
-//                zreleaseMaven()
             }
         }
     }

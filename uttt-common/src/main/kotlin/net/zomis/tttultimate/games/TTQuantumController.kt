@@ -38,7 +38,6 @@ class TTQuantumController : TTController(TTFactories().ultimate()) {
             game.determineWinner()
             if (game.wonBy === TTPlayer.XO) {
                 game.setPlayedBy(tieBreak())
-
             }
             return true
         }

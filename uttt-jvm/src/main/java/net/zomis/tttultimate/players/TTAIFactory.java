@@ -102,12 +102,15 @@ public class TTAIFactory {
 			while (!game.isGameOver()) {
 				TTAI pl = playerFor(players, game.getCurrentPlayer());
 				TTBase choice = pl.play(game);
-				if (choice != null)
+				if (choice != null) {
 					game.play(choice);
-				else break;
+				} else {
+					break;
+				}
 			}
-			if (!game.isGameOver()) // game has ended in a draw
+			if (game.getWonBy() == TTPlayer.BLOCKED) { // game has ended in a draw
 				return null;
+			}
 			return playerFor(players, game.getWonBy());
 		}
 		private static <E> E playerFor(E[] players, TTPlayer player) {

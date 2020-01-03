@@ -21,19 +21,22 @@ abstract class TTController(val game: TTBase) {
     abstract fun isAllowedPlay(tile: TTBase): Boolean
 
     fun play(tile: TTBase?): Boolean {
-        if (tile == null)
+        if (tile == null) {
             throw IllegalArgumentException("Tile to play at cannot be null.")
+        }
 
         if (!isAllowedPlay(tile)) {
             return false
         }
-        if (!this.performPlay(tile))
+        if (!this.performPlay(tile)) {
             return false
+        }
 
         this.addToHistory(tile)
 
-        if (this.moveListener != null)
+        if (this.moveListener != null) {
             this.moveListener!!.onMove(tile)
+        }
 
         return true
     }

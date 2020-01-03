@@ -53,7 +53,17 @@ class TTBase(val parent: TTBase?, val x: Int, val y: Int,
         for (cond in this.winConds) {
             winner = winner.or(cond.determineWinnerNew())
         }
+        if (winner == TTPlayer.NONE && subs().all { it.isWon }) {
+            winner = TTPlayer.BLOCKED
+        }
         this.wonBy = winner
+    }
+
+    fun subs(): List<TTBase> {
+        if (!hasSubs()) {
+            return emptyList()
+        }
+        return subs.flatMap { it.toList() }
     }
 
     override fun getSub(x: Int, y: Int): TTBase? {
@@ -80,11 +90,7 @@ class TTBase(val parent: TTBase?, val x: Int, val y: Int,
 
     fun reset() {
         this.setPlayedBy(TTPlayer.NONE)
-        for (xx in 0 until sizeX) {
-            for (yy in 0 until sizeY) {
-                this.getSub(xx, yy)!!.reset()
-            }
-        }
+        subs().forEach { it.reset() }
     }
 
     fun getSmallestTile(x: Int, y: Int): TTBase? {

@@ -12,11 +12,17 @@ class TTUltimateController(board: TTBase) : TTController(board) {
         val area = tile.parent ?: return false
         val game = tile.parent.parent
 
-        if (!tile.wonBy.equals(TTPlayer.NONE))
+        if (tile.wonBy != TTPlayer.NONE) {
             return false
-        if (area.wonBy.isExactlyOnePlayer)
+        }
+        if (area.wonBy.isExactlyOnePlayer) {
             return false
-        return if (game!!.isWon) false else activeBoard == null || activeBoard == area || activeBoard!!.wonBy !== TTPlayer.NONE
+        }
+        return if (game!!.isWon) {
+            false
+        } else {
+            activeBoard == null || activeBoard == area || activeBoard!!.wonBy !== TTPlayer.NONE
+        }
     }
 
     override fun performPlay(tile: TTBase): Boolean {

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 
 class DryUsage {
     private enum class Winner : Winnable {
-        NONE, X, O, XO;
+        NONE, X, O, XO, BLOCKED;
 
         override val wonBy: TTPlayer
             get() = TTPlayer.valueOf(this.toString())
@@ -15,6 +15,9 @@ class DryUsage {
 
     @Test
     fun consecutivePassed() {
+        assertEquals(TTPlayer.NONE, TTWinCondition(listOf(Winner.X, Winner.BLOCKED, Winner.X), 2).determineWinnerNew())
+
+
         assertEquals(TTPlayer.NONE, TTWinCondition(listOf(Winner.NONE, Winner.NONE, Winner.NONE), 2).determineWinnerNew())
         assertEquals(TTPlayer.NONE, TTWinCondition(listOf(Winner.NONE, Winner.X, Winner.NONE), 2).determineWinnerNew())
 
@@ -37,7 +40,6 @@ class DryUsage {
             assertEquals(pl, TTPlayer.NONE.or(pl))
             assertEquals(pl, pl.or(pl))
             assertEquals(pl, pl.and(pl))
-
         }
         assertEquals(TTPlayer.NONE, TTPlayer.X.and(TTPlayer.O))
         assertEquals(TTPlayer.NONE, TTPlayer.O.and(TTPlayer.X))

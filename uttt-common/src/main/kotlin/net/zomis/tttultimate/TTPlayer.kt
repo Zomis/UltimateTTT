@@ -2,14 +2,29 @@ package net.zomis.tttultimate
 
 enum class TTPlayer {
 
-    NONE, X, O, XO;
+    /**
+     * No player
+     */
+    NONE,
+    X,
+    O,
+    /**
+     * Both players has succeeded
+     */
+    XO,
+    /**
+     * Neither player (both have tried, none has succeeded)
+     */
+    BLOCKED,
+    ;
 
     val isExactlyOnePlayer: Boolean
         get() = this == X || this == O
 
     operator fun next(): TTPlayer {
-        if (!isExactlyOnePlayer)
+        if (!isExactlyOnePlayer) {
             throw UnsupportedOperationException("Only possible to call .next() on a real player but it was called on " + this)
+        }
         return if (this == X) O else X
     }
 
@@ -31,6 +46,9 @@ enum class TTPlayer {
         if (isExactlyOnePlayer && other.isExactlyOnePlayer) {
             return if (this == other) this else NONE
         }
+        if (this == BLOCKED || other == BLOCKED) {
+            return other
+        }
         return if (this == XO) other else other.and(this)
     }
 
@@ -43,6 +61,9 @@ enum class TTPlayer {
         }
         if (this == XO) {
             return this
+        }
+        if (this == BLOCKED || other == BLOCKED) {
+            return BLOCKED
         }
         return if (this != other) XO else this
     }
