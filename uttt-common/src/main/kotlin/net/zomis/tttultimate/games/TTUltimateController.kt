@@ -6,7 +6,8 @@ import net.zomis.tttultimate.TicUtils
 
 class TTUltimateController(board: TTBase) : TTController(board) {
     // TODO: Try making it even more Ultimate by adding one more dimension, and use Map<TTBase, TTBase> activeBoards. Just for fun.
-    private var activeBoard: TTBase? = null
+    var activeBoard: TTBase? = null
+        private set
 
     override fun isAllowedPlay(tile: TTBase): Boolean {
         val area = tile.parent ?: return false
