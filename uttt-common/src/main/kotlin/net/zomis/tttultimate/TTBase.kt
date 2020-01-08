@@ -40,8 +40,8 @@ class TTBase(val parent: TTBase?, val x: Int, val y: Int,
     constructor(parent: TTBase?, parameters: TTMNKParameters, factory: TicFactory) : this(parent, 0, 0, parameters, factory)
 
     init {
-        this.subs = Array(mnkParameters.width) { xx ->
-            Array(mnkParameters.height) { yy ->
+        this.subs = Array(mnkParameters.height) { yy ->
+            Array(mnkParameters.width) { xx ->
                 factory!!.invoke(this, xx, yy)
             }
         }
@@ -73,7 +73,7 @@ class TTBase(val parent: TTBase?, val x: Int, val y: Int,
         if (x < 0 || y < 0) {
             return null
         }
-        return if (x >= sizeX || y >= sizeY) null else subs[x][y]
+        return if (x >= sizeX || y >= sizeY) null else subs[y][x]
     }
 
     fun setPlayedBy(playedBy: TTPlayer) {
