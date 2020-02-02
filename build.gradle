@@ -57,14 +57,4 @@ subprojects {
             }
         }
     }
-//
-//    task("uploadJars", type: uploadArchives, dependsOn: build) {
-//        def creds = getCredentials()
-//        repositories.mavenDeployer {
-//            configuration = configurations.deployerJars
-//            repository(url: "ftp://www.zomis.net/public_html/maven") {
-//                authentication(userName: System.getenv()['FTPUserName'], password: System.getenv()['FTPPassword'])
-//            }
-//        }
-//    }
 }
